@@ -4,12 +4,12 @@ DEBUG = bool(os.environ.get("DEBUG"))
 
 ALLOWED_HOSTS = ["*.herokuapp.com", "127.0.0.1",]
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER     = os.environ.get("GMAIL_EMAIL")
-EMAIL_HOST_PASSWORD = os.environ.get("GMAIL_PASSWORD")
-EMAIL_PORT = 465
-EMAIL_USE_SSL = True # Yes for Gmail
-DEFAULT_FROM_EMAIL = "GLC <ch4rles.co@gmail.com>"
+EMAIL_HOST = os.environ.get("MAILGUN_SMTP_SERVER", "")
+EMAIL_HOST_USER     = os.environ.get("MAILGUN_SMTP_LOGIN", "")
+EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD", "")
+EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", "")
+# EMAIL_USE_SSL = True # Yes for Gmail
+# DEFAULT_FROM_EMAIL = "GLC <ch4rles.co@gmail.com>"
 
 CORS_REPLACE_HTTPS_REFERER      = True
 HOST_SCHEME                     = "https://"
