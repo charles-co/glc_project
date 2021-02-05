@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = bool(os.environ.get("DEBUG"))
 
-ALLOWED_HOSTS = ["*.herokuapp.com, '127.0.0.1',"]
+ALLOWED_HOSTS = ["*.herokuapp.com", "127.0.0.1",]
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER     = os.environ.get("GMAIL_EMAIL")
