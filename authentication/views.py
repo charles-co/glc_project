@@ -87,7 +87,10 @@ class UserViewSet(GenericViewSet):
 
     @action(methods=['post'], detail=False, url_path="resend-verification")
     def resend_verification(self, request):
+        """
+        Resend verification token
 
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         self.send_verification(request, serializer)
@@ -95,6 +98,11 @@ class UserViewSet(GenericViewSet):
     
     @action(methods=['post'], detail=False, url_path="register")
     def register(self, request):
+        """
+        Register a user, only email and password is required
+        a mail is sent to specified mail on validation success
+        
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -114,6 +122,11 @@ class UserViewSet(GenericViewSet):
 
     @action(methods=['get'], detail=False, url_path="verify-email")
     def verify_email(self, request):
+        """
+        Verify token set to user before password reset 
+        
+        """
+
         token = request.GET.get('token')
         payload = jwt.decode(token, settings.SECRET_KEY)
         try:
@@ -129,6 +142,14 @@ class UserViewSet(GenericViewSet):
     
     @action(methods=['post'], detail=False)
     def login(self, request):
+        """
+        log in authorized user,
+        access token obtained should be placed in header with 'Bearer' name
+        a user can only make a request if access token is included and not expired,
+        refresh token should be used to obtain a new access token once the current 
+        access token expires. access token last for only 10 mins.
+        
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
@@ -136,6 +157,11 @@ class UserViewSet(GenericViewSet):
     
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated,])
     def logout(self, request):
+        """
+        Log out user,
+        refresh token as input.
+        
+        """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -144,6 +170,10 @@ class UserViewSet(GenericViewSet):
     @action(methods=['get'], detail=False, url_path="profile", 
     permission_classes=[IsAuthenticated, IsOwner,])
     def profile(self, request):
+        """
+        User details.
+        
+        """
         profile = self.get_object()
         serializer = self.get_serializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
@@ -158,6 +188,12 @@ class UserViewSet(GenericViewSet):
 
     @action(methods=['patch'], detail=False, url_path="set-password",)
     def set_password(self, request):
+
+        """
+        Set user password after token authentication
+        
+        """
+
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset successful'}, status=status.HTTP_200_OK)
@@ -165,7 +201,11 @@ class UserViewSet(GenericViewSet):
     @action(methods=['put'], detail=False, url_path="profile/update/complete", 
     permission_classes=[IsAuthenticated, IsOwner,], parser_classes=[FormParser, MultiPartParser,])
     def update_profile(self, request, *args, **kwargs):
+        """
+        Updates all user profile fields instance.
+        All fields must be filled.
         
+        """
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
@@ -182,6 +222,11 @@ class UserViewSet(GenericViewSet):
     @action(methods=['patch'], detail=False, url_path="profile/update", 
     permission_classes=[IsAuthenticated, IsOwner,], parser_classes=[FormParser, MultiPartParser,])
     def partial_update_profile(self, request, *args, **kwargs):
+        """
+        Updates user profile fields instance.
+        Only necessary fields can be filled.
+        
+        """
 
         kwargs['partial'] = True
         return self.update_profile(request, *args, **kwargs)
@@ -189,7 +234,7 @@ class UserViewSet(GenericViewSet):
 class PasswordResetConfirm(GenericAPIView):
 
     def get(self, request, uidb64, token):
-        redirect_url = request.GET.get('redirect_url')
+        redirect_url = request.GET.get('redirect_url', '')
         try:
             _id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.filter(id=_id).first()
