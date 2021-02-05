@@ -24,6 +24,8 @@ from rest_framework_simplejwt.tokens import RefreshToken
 import jwt
 import os
 from functools import wraps
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from .models import Profile
 from .permissions import IsOwner
@@ -42,7 +44,10 @@ class UserViewSet(GenericViewSet):
     
     renderer_classes = (UserRenderer,)
     queryset = Profile.objects.all()
-
+    token_param_config = openapi.Parameter(
+            'token', in_=openapi.IN_QUERY, description='Description',
+            type=openapi.TYPE_STRING
+        )
     def get_queryset(self):
         user = self.request.user
         return super().get_queryset().filter(user=user).select_related('user')
@@ -120,15 +125,14 @@ class UserViewSet(GenericViewSet):
         payload = {'body': body, 'subject': 'Verify your email', 'email': user.email}
         Util.send_email(payload)
 
+    @swagger_auto_schema(manual_parameters=[token_param_config])
     @action(methods=['get'], detail=False, url_path="verify-email")
     def verify_email(self, request):
         """
         Verify token set to user before password reset 
         
         """
-
         token = request.GET.get('token')
-        payload = jwt.decode(token, settings.SECRET_KEY)
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
             user = User.objects.filter(id=payload['user_id'])
