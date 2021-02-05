@@ -4,7 +4,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['192.168.43.184', '127.0.0.1', '172.20.10.4', "*.herokuapp.com"]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER     = os.environ.get("GMAIL_EMAIL")

@@ -1,23 +1,16 @@
-from django.conf import settings
-from django.core.mail import send_mail
+from django.core.mail import EmailMessage
 
 import threading
 
 
 class EmailThread(threading.Thread):
 
-    def __init__(self, payload):
-        self.payload = payload
+    def __init__(self, email):
+        self.email = email
         threading.Thread.__init__(self)
 
     def run(self):
-        send_mail(
-            self.payload['subject'],
-            self.payload['body'],
-            settings.DEFAULT_FROM_EMAIL,
-            (self.payload['email'],),
-            fail_silently=False,
-        )
+        self.email.send()
 
 
 
@@ -25,4 +18,8 @@ class Util:
 
     @staticmethod
     def send_email(payload):
-        EmailThread(payload).start()
+        email = EmailMessage(subject=payload['subject'],
+                                body=payload['body'],
+                                to=[payload['email']],
+                            )
+        EmailThread(email).start()
