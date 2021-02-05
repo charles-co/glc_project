@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = True
+DEBUG = bool(os.environ.get("GMAIL_EMAIL"))
 
 ALLOWED_HOSTS = ["*.herokuapp.com, '127.0.0.1',"]
 
