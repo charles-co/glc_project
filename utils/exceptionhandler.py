@@ -12,7 +12,7 @@ def custom_exception_handler(exc, context):
     response = exception_handler(exc, context)
 
     if response is not None:
-        if 'UserViewSet' in str(context['view']) and exc.status_code == 401:
+        if 'profile' in str(context['view'].action) and exc.status_code == 401:
             response.status_code = 200
             response.data = {'is_logged_in': False,
                                 'status_code': 200
