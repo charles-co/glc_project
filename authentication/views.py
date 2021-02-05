@@ -112,7 +112,7 @@ class UserViewSet(GenericViewSet):
         payload = {'body': body, 'subject': 'Verify your email', 'email': user.email}
         Util.send_email(payload)
 
-    @action(methods=['post'], detail=False, url_path="verify-email")
+    @action(methods=['get'], detail=False, url_path="verify-email")
     def verify_email(self, request):
         token = request.GET.get('token')
         payload = jwt.decode(token, settings.SECRET_KEY)
