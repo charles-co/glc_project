@@ -99,7 +99,8 @@ class UserViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         self.send_verification(request, serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = {serializer.data, "message": "verification mail sent successfully"}
+        return Response(data, status=status.HTTP_201_CREATED)
 
     def send_verification(self, request, serializer):
         data = serializer.data
