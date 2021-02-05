@@ -9,7 +9,7 @@ EMAIL_HOST_USER     = os.environ.get("MAILGUN_SMTP_LOGIN", "")
 EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD", "")
 EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", "")
 # EMAIL_USE_SSL = True # Yes for Gmail
-# DEFAULT_FROM_EMAIL = "GLC <ch4rles.co@gmail.com>"
+DEFAULT_FROM_EMAIL = "GLC <webmaster@localhost>"
 
 CORS_REPLACE_HTTPS_REFERER      = True
 HOST_SCHEME                     = "https://"
