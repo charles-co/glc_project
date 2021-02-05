@@ -1,0 +1,1 @@
+web: gunicorn glc_project.wsgi --log-file -
