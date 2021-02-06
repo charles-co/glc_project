@@ -35,7 +35,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     #     return instance
 
-class UserSerializer(serializers.ModelSerializer):
+class MyUserSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
@@ -188,3 +188,10 @@ class LogoutSerializer(serializers.Serializer):
         
         except TokenError:
             self.fail('bad_token')      
+
+class SocialSerializer(serializers.Serializer):
+    """
+    Serializer which accepts an OAuth2 access token.
+    """
+    provider = serializers.CharField(max_length=255, required=True)
+    access_token = serializers.CharField(max_length=4096, required=True, trim_whitespace=True)

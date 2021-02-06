@@ -10,6 +10,7 @@ from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.encoding import force_str, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode
+from requests.exceptions import HTTPError
 
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
@@ -21,6 +22,8 @@ from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from social_django.utils import psa
+
 import jwt
 import os
 from functools import wraps
@@ -31,8 +34,9 @@ from .models import Profile
 from .permissions import IsOwner
 from .renderers import UserRenderer
 from .serializers import (LoginSerializer, ProfileSerializer, RegisterSerializer, 
-                            ResetPasswordEmailRequestSerializer, UserSerializer, 
-                            PasswordSerializer, LogoutSerializer, ResendVerification)
+                            ResetPasswordEmailRequestSerializer, MyUserSerializer, 
+                            PasswordSerializer, LogoutSerializer, ResendVerification,
+                            SocialSerializer,)
 from .utils import Util
 
 User = get_user_model()
@@ -53,9 +57,7 @@ class UserViewSet(GenericViewSet):
         return super().get_queryset().filter(user=user).select_related('user')
 
     def get_object(self):
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, user=self.request.user)
-        return obj
+        return self.request.user
 
     # def get_permissions(self):
     #     actions = ['retrieve', 'partial_update', 'update']
@@ -66,7 +68,7 @@ class UserViewSet(GenericViewSet):
     def get_serializer_class(self):
         actions = ['register', 'login', 
                     'request_password_reset', 'set_password', 
-                    'logout', 'user', 'resend_verification']
+                    'logout', 'user', 'resend_verification', 'social']
         if self.action == actions[0]:
             return RegisterSerializer
         elif self.action == actions[1]:
@@ -81,6 +83,8 @@ class UserViewSet(GenericViewSet):
             return RegisterSerializer
         elif self.action == actions[6]:
             return ResendVerification
+        elif self.action == actions[7]:
+            return SocialSerializer
         else:
             return ProfileSerializer
         return super().get_serializer_class()
@@ -129,7 +133,7 @@ class UserViewSet(GenericViewSet):
     @action(methods=['get'], detail=False, url_path="verify-email")
     def verify_email(self, request):
         """
-        Verify token set to user before password reset 
+        Verify token set to newly registered users before user can login 
         
         """
         token = request.GET.get('token')
@@ -234,6 +238,38 @@ class UserViewSet(GenericViewSet):
 
         kwargs['partial'] = True
         return self.update_profile(request, *args, **kwargs)
+
+    # @psa()
+    # @action(methods=['POST'], detail=False, url_path="social/authentication/(?P<backend>[0-9A-Za-z_\-]+)",)
+    # def social(request, backend):
+    #     serializer = self.get_serializer(data=request.data)
+    #     if serializer.is_valid(raise_exception=True):
+    #         try:
+    #             user = request.backend.do_auth(serializer.validated_data['access_token'])
+    #         except HTTPError as e:
+    #             return Response(
+    #                 {'errors': {
+    #                     'token': 'Invalid token',
+    #                     'detail': str(e),
+    #                 }},
+    #                 status=status.HTTP_400_BAD_REQUEST,
+    #             )
+
+    #     if user:
+    #         if user.is_active:
+    #             return Response({'email': user.email,
+    #                                 'access': user.token['access'],
+    #                                 'refresh': user.token['refresh']}, status=status.HTTP_200_OK)
+    #         else:
+    #             return Response(
+    #                 {'errors': 'This user account is inactive'},
+    #                 status=status.HTTP_400_BAD_REQUEST,
+    #             )
+    #     else:
+    #         return Response(
+    #             {'errors': {nfe: "Authentication Failed"}},
+    #             status=status.HTTP_400_BAD_REQUEST,
+    #         )
 
 class PasswordResetConfirm(GenericAPIView):
 
