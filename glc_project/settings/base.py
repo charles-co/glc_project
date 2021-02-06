@@ -77,6 +77,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'AUTH_TOKEN_CLASSES': (
+            'rest_framework_simplejwt.tokens.AccessToken',
+            rest_framework_simplejwt.tokens.SlidingToken',
+        ),
 }
 
 SWAGGER_SETTINGS = {
@@ -151,6 +155,13 @@ REST_FRAMEWORK = {
         # 'rest_framework_social_oauth2.backends.ModelBackend',
     ),
 }
+AUTHENTICATION_BACKENDS = (
+        # 'social_core.backends.facebook.FacebookAppOAuth2',
+        'social_core.backends.facebook.FacebookOAuth2',
+        'social_core.backends.google.GoogleOAuth2',
+        'django.contrib.auth.backends.ModelBackend',
+)
+        
 SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
