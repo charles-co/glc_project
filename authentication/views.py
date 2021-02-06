@@ -34,7 +34,7 @@ from .models import Profile
 from .permissions import IsOwner
 from .renderers import UserRenderer
 from .serializers import (LoginSerializer, ProfileSerializer, RegisterSerializer, 
-                            ResetPasswordEmailRequestSerializer, MyUserSerializer, 
+                            ResetPasswordEmailRequestSerializer, UserSerializer, 
                             PasswordSerializer, LogoutSerializer, ResendVerification,
                             SocialSerializer,)
 from .utils import Util

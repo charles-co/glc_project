@@ -144,21 +144,14 @@ REST_FRAMEWORK = {
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
         # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        # 'rest_framework_social_oauth2.authentication.SocialAuthentication',
-    ),
-    'AUTHENTICATION_BACKENDS': (
-        # 'social_core.backends.facebook.FacebookAppOAuth2',
-        'social_core.backends.facebook.FacebookOAuth2',
-        'social_core.backends.google.GoogleOAuth2',
-        'django.contrib.auth.backends.ModelBackend',
-        # 'rest_framework_social_oauth2.backends.DjangoOAuth2',
-        # 'rest_framework_social_oauth2.backends.ModelBackend',
     ),
 }
+
 AUTHENTICATION_BACKENDS = (
         # 'social_core.backends.facebook.FacebookAppOAuth2',
         'social_core.backends.facebook.FacebookOAuth2',
         'social_core.backends.google.GoogleOAuth2',
+
         'django.contrib.auth.backends.ModelBackend',
 )
         
