@@ -16,7 +16,7 @@ router.register(r'auth', UserViewSet, basename='user')
 urlpatterns = [
     path('api/', include((router.urls, 'authentication'))),
     path('token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
-    # path('api/auth/password/reset/<uidb64>/<token>/', 
-    #         PasswordResetConfirm.as_view(), name='password-reset-confirm'),
+    path('api/auth/password/reset/<uidb64>/<token>/', 
+            PasswordResetConfirm.as_view(), name='password-reset-confirm'),
 
 ]
