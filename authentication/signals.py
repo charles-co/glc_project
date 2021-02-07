@@ -4,7 +4,7 @@ from django.db.models.signals import post_save, pre_save, pre_delete
 from django.conf import settings
 from django.dispatch import receiver
 
-from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
+# from rest_framework_simplejwt.token_blacklist.models import OutstandingToken
 
 from .models import Profile
 

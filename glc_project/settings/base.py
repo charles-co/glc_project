@@ -45,15 +45,12 @@ INSTALLED_APPS = [
     'authentication', 
     
     # third party apps
-    # 'oauth2_provider',
-    'sslserver',
-    'social_django',
-    'oauth2_provider',
-    # 'rest_social_auth',
-    'rest_framework_social_oauth2',
+    # 'sslserver',
     'drf_yasg',
     'corsheaders',
+    'social_django',
     'rest_framework',
+    'rest_social_auth',
     'rest_framework_simplejwt.token_blacklist',
     'phonenumber_field',
     'sorl_thumbnail_serializer',
@@ -79,10 +76,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    # 'AUTH_TOKEN_CLASSES': (
-    #         'rest_framework_simplejwt.tokens.AccessToken',
-    #         'rest_framework_simplejwt.tokens.SlidingToken',
-    #     ),
+    'AUTH_TOKEN_CLASSES': (
+            'rest_framework_simplejwt.tokens.AccessToken',
+            'rest_framework_simplejwt.tokens.SlidingToken',
+        ),
 }
 
 SWAGGER_SETTINGS = {
@@ -145,17 +142,13 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
-        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
 }
 
 AUTHENTICATION_BACKENDS = (
-        'social_core.backends.facebook.FacebookAppOAuth2',
-        'social_core.backends.facebook.FacebookOAuth2',
-        'social_core.backends.google.GoogleOAuth2',
-        'rest_framework_social_oauth2.backends.DjangoOAuth2',
-        'django.contrib.auth.backends.ModelBackend',
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
 )
         
 SOCIAL_AUTH_PIPELINE = (
@@ -163,15 +156,15 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
-    'authentication.social_pipeline.check_for_email',  # custom action
+    # 'authentication.social_pipeline.check_for_email',  # custom action
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'authentication.social_pipeline.save_avatar',  # custom action
-    'authentication.social_pipeline.save_full_name',  # custom action
+    # 'authentication.social_pipeline.save_avatar',  # custom action
+    # 'authentication.social_pipeline.save_full_name',  # custom action
 )
 
 
