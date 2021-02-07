@@ -48,7 +48,9 @@ INSTALLED_APPS = [
     # 'oauth2_provider',
     'sslserver',
     'social_django',
-    'rest_social_auth',
+    'oauth2_provider',
+    # 'rest_social_auth',
+    'rest_framework_social_oauth2',
     'drf_yasg',
     'corsheaders',
     'rest_framework',
@@ -143,15 +145,16 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
         # 'rest_framework.authentication.BasicAuthentication',
         # 'rest_framework.authentication.SessionAuthentication',
-        # 'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'oauth2_provider.contrib.rest_framework.OAuth2Authentication',
+        'rest_framework_social_oauth2.authentication.SocialAuthentication',
     ),
 }
 
 AUTHENTICATION_BACKENDS = (
-        # 'social_core.backends.facebook.FacebookAppOAuth2',
+        'social_core.backends.facebook.FacebookAppOAuth2',
         'social_core.backends.facebook.FacebookOAuth2',
         'social_core.backends.google.GoogleOAuth2',
-
+        'rest_framework_social_oauth2.backends.DjangoOAuth2',
         'django.contrib.auth.backends.ModelBackend',
 )
         
@@ -171,9 +174,9 @@ SOCIAL_AUTH_PIPELINE = (
 
 
 REST_SOCIAL_OAUTH_LOGIN_REDIRECT_URI = '/'
-
+SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True
-
+SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 
@@ -187,9 +190,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
 
 # SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-# SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-#     'fields': 'id, name, email'
-# }
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email'
+}
 
 
 
