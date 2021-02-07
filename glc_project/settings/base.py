@@ -79,10 +79,10 @@ CORS_ORIGIN_ALLOW_ALL = True
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-    'AUTH_TOKEN_CLASSES': (
-            'rest_framework_simplejwt.tokens.AccessToken',
-            'rest_framework_simplejwt.tokens.SlidingToken',
-        ),
+    # 'AUTH_TOKEN_CLASSES': (
+    #         'rest_framework_simplejwt.tokens.AccessToken',
+    #         'rest_framework_simplejwt.tokens.SlidingToken',
+    #     ),
 }
 
 SWAGGER_SETTINGS = {
@@ -159,25 +159,28 @@ AUTHENTICATION_BACKENDS = (
 )
         
 SOCIAL_AUTH_PIPELINE = (
+    'authentication.social_pipeline.auto_logout',  # custom action
     'social_core.pipeline.social_auth.social_details',
     'social_core.pipeline.social_auth.social_uid',
     'social_core.pipeline.social_auth.auth_allowed',
+    'authentication.social_pipeline.check_for_email',  # custom action
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
-    'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
+    'authentication.social_pipeline.save_avatar',  # custom action
+    'authentication.social_pipeline.save_full_name',  # custom action
 )
 
 
 
-REST_SOCIAL_OAUTH_LOGIN_REDIRECT_URI = '/'
+# REST_SOCIAL_OAUTH_LOGIN_REDIRECT_URI = '/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email', 'profile']
 
 SOCIAL_AUTH_ADMIN_USER_SEARCH_FIELDS = ['email']
@@ -191,7 +194,13 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SEC
 
 # SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
-    'fields': 'id, name, email'
+    'fields': ','.join([
+        # public_profile
+        'id', 'cover', 'name', 'first_name', 'last_name', 'age_range', 'link',
+        'gender', 'locale', 'picture', 'timezone', 'updated_time', 'verified',
+        # extra fields
+        'email',
+    ]),
 }
 
 
