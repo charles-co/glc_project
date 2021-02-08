@@ -83,8 +83,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
 
     def __str__(self):
-        if self.profile.full_name:
-            return self.profile.full_name
+        # if self.profile.full_name:
+        #     return self.profile.full_name
         return self.email
 
     def has_perm(self, perm, obj=None):
@@ -106,6 +106,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, verbose_name=_("User"), on_delete=models.CASCADE)
     full_name = models.CharField(_('full name'), max_length=100, default="Anonymous", blank=True)
     file = ImageField(verbose_name=_("Profile photo"), upload_to=images_directory_path, null=True, blank=True)
+    social_thumb = models.URLField(verbose_name=_("Social photo"), null=True, blank=True)
     phone_number = PhoneNumberField(verbose_name=_("Phone no."), null=True, blank=True)
     dob = models.DateField(verbose_name=_("Date of birth"), null=True, blank=True)
 

@@ -1,52 +1,48 @@
 import hashlib
 from rest_framework.response import Response
 
+from .models import Profile
+
 
 def auto_logout(*args, **kwargs):
     """Do not compare current user with new one"""
     return {'user': None}
 
 
-def save_avatar(strategy, details, user=None, *args, **kwargs):
-    """Get user avatar from social provider."""
+def verify_user(strategy, details, user=None, *args, **kwargs):
     if user:
-        backend_name = kwargs['backend'].__class__.__name__.lower()
-        response = kwargs.get('response', {})
-        social_thumb = None
-        if 'facebook' in backend_name:
-            if 'id' in response:
-                social_thumb = (
-                    'http://graph.facebook.com/{0}/picture?type=normal'
-                ).format(response['id'])
-        elif 'twitter' in backend_name and response.get('profile_image_url'):
-            social_thumb = response['profile_image_url']
-        elif 'googleoauth2' in backend_name and response.get('image', {}).get('url'):
-            social_thumb = response['image']['url'].split('?')[0]
-        else:
-            social_thumb = 'http://www.gravatar.com/avatar/'
-            social_thumb += hashlib.md5(user.email.lower().encode('utf8')).hexdigest()
-            social_thumb += '?size=100'
-        if social_thumb and user.profile.file == None:
-            user.profile.file = social_thumb
+        if not user.is_verified:
+            user.is_verified = True
             strategy.storage.user.changed(user)
-
-def save_full_name(strategy, details, user=None, *args, **kwargs):
-    """Get user full_name from social provider."""
+    
+def save_profile(backend, user, details, response, *args, **kwargs):
     if user:
-        backend_name = kwargs['backend'].__class__.__name__.lower()
-        response = kwargs.get('response', {})
-        social_thumb = None
-        if 'facebook' in backend_name:
-            if 'first_name' in response:
-                pass
-                
-        elif 'googleoauth2' in backend_name and response.get('first_name', None):
-            pass
-        else:
-            pass
-        if user.profile.full_name == None:
-            user.profile.file = "Hmmmm"
-            strategy.storage.user.changed(user)
+        try:
+            profile = user.profile
+        except:
+            print("created !!")
+            profile = Profile(user_id=user.id)
+            profile.save()
+        if profile:
+            social_thumb = None
+            name = None
+            if backend.name == 'facebook' and response.get("picture", {}).get("data", {}).get("url", None) or response.get("name", None):
+                social_thumb = response.get("picture", {}).get("data", {}).get("url")
+                name = response.get("name", None)
+            elif backend.name == 'google-oauth2' and response.get('picture', {}):
+                social_thumb = response['picture']
+            elif not social_thumb:
+                social_thumb = 'http://www.gravatar.com/avatar/'
+                social_thumb += hashlib.md5(user.email.lower().encode('utf8')).hexdigest()
+                social_thum
+                b += '?size=100'
+            if social_thumb or name:
+                if social_thumb:
+                    profile.social_thumb = social_thumb
+                if name:
+                    if profile.fulll_name != "Anonymous":
+                        profile.full_name = name
+                profile.save()
 
 def check_for_email(backend, uid, user=None, *args, **kwargs):
     if not kwargs['details'].get('email'):

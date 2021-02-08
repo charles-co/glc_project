@@ -76,7 +76,7 @@ class LoginSerializer(serializers.ModelSerializer):
 
     def get_tokens(self, obj):
         user = User.objects.get(email=obj['email'])
-        return {'access': user.tokens['access'], 'refresh':user.tokens['refresh']}
+        return {'token': user.tokens['access'], 'refresh':user.tokens['refresh']}
 
     def validate(self, attrs):
         email = attrs.get('email', '')
@@ -92,12 +92,11 @@ class LoginSerializer(serializers.ModelSerializer):
             else:
                 if not user.is_verified:
                     raise AuthenticationFailed('Email not verified.')
-    
         return {
+            'id': 0,
             'email': user.email,
-            'tokens': attrs.get('tokens', '')
+            'tokens': self.get_tokens,
         }
-        return super().validate(attrs)
 
 class ResendVerification(serializers.Serializer):
 

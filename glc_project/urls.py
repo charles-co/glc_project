@@ -14,11 +14,15 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
+from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
+from django.views.generic.base import TemplateView
 
 from rest_framework import permissions 
+from rest_social_auth import views 
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
@@ -28,7 +32,7 @@ schema_view = get_schema_view(
         openapi.Info(
             title="GLC API",
             default_version='v1',
-            description="Test description",
+            description="API Test",
             terms_of_service="https://www.google.com/policies/terms/",
             contact=openapi.Contact(email="contact@glc.local"),
             license=openapi.License(name="BSD License"),
@@ -40,8 +44,18 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
-    path('api/auth/', include('rest_social_auth.urls_jwt_pair')),
-    path('', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('', TemplateView.as_view(template_name='index.html')),
+    # path('api/auth/', include('rest_social_auth.urls_jwt_pair')),
+    # returns jwt + user_data
+    re_path(r'^api/auth/login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
+            views.SocialJWTPairOnlyAuthView.as_view(),
+            name='login_social_jwt_pair'),
+    # returns token + user_data
+    # re_path(r'^social/jwt-pair-user/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
+    #         views.SocialJWTPairUserAuthView.as_view(),
+    #         name='login_social_jwt_pair_user'),
+
+    path('swagger', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 
 ]

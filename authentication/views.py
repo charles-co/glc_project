@@ -55,7 +55,7 @@ class UserViewSet(GenericViewSet):
         return super().get_queryset().filter(user=user).select_related('user')
 
     def get_object(self):
-        return self.request.user
+        return get_object_or_404(self.get_queryset(), user=self.request.user)
 
     # def get_permissions(self):
     #     actions = ['retrieve', 'partial_update', 'update']
@@ -140,7 +140,7 @@ class UserViewSet(GenericViewSet):
             user = User.objects.filter(id=payload['user_id'])
             if not user.first().is_verified:
                 user.update(is_verified=True)
-            return Response({'email': 'Successfully activated.'}, status=status.HTTP_200_OK)
+            return CustomRedirect(os.environ.get("FRONTEND_URL",""))
         except jwt.ExpiredSignatureError as identifier:
             return Response({'error': 'Activation link expired.'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
@@ -158,8 +158,8 @@ class UserViewSet(GenericViewSet):
         """
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        data = serializer.data['tokens']
+        return Response(data, status=status.HTTP_200_OK)
     
     @action(methods=['post'], detail=False, permission_classes=[IsAuthenticated,])
     def logout(self, request):
@@ -238,6 +238,8 @@ class UserViewSet(GenericViewSet):
         return self.update_profile(request, *args, **kwargs)
 
 class PasswordResetConfirm(GenericAPIView):
+
+    serializer_class = None
 
     def get(self, request, uidb64, token):
         redirect_url = request.GET.get('redirect_url', '')

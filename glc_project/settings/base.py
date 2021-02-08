@@ -16,6 +16,7 @@ from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+TEMPLATE_DIR = os.path.join(BASE_DIR,'templates')
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
@@ -45,7 +46,7 @@ INSTALLED_APPS = [
     'authentication', 
     
     # third party apps
-    # 'sslserver',
+    'sslserver',
     'drf_yasg',
     'corsheaders',
     'social_django',
@@ -93,7 +94,7 @@ ROOT_URLCONF = 'glc_project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -103,6 +104,8 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'glc_project.context_processors.debug',
+
             ],
         },
     },
@@ -156,18 +159,20 @@ SOCIAL_AUTH_PIPELINE = (
     'authentication.social_pipeline.check_for_email',  # custom action
     'social_core.pipeline.social_auth.social_user',
     'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
     'social_core.pipeline.user.create_user',
+    'authentication.social_pipeline.save_profile',  # custom action
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
     'social_core.pipeline.user.user_details',
-    'authentication.social_pipeline.save_avatar',  # custom action
-    'authentication.social_pipeline.save_full_name',  # custom action
+    'authentication.social_pipeline.verify_user',  # custom action
 )
 
 
 
 # REST_SOCIAL_OAUTH_LOGIN_REDIRECT_URI = '/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
+SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email',]
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = '/'
 
@@ -180,7 +185,7 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email']
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email',]
 
 # SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
@@ -219,7 +224,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-# STATICFILES_DIRS = (
-#     os.path.join(BASE_DIR, 'static'),
-# )
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+)
