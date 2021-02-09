@@ -31,10 +31,9 @@ from drf_yasg import openapi
 from .models import Profile
 from .permissions import IsOwner
 from .renderers import UserRenderer
-from .serializers import (LoginSerializer, ProfileSerializer, RegisterSerializer, 
+from .serializers import (LoginSerializer, ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, 
                             ResetPasswordEmailRequestSerializer, UserSerializer, 
-                            PasswordSerializer, LogoutSerializer, ResendVerification,
-                            SocialSerializer,)
+                            PasswordSerializer, LogoutSerializer, ResendVerification,)
 from .utils import Util
 
 User = get_user_model()
@@ -83,6 +82,8 @@ class UserViewSet(GenericViewSet):
             return ResendVerification
         elif self.action == actions[7]:
             return SocialSerializer
+        elif "update" in self.action:
+            return ProfileUpdateSerializer 
         else:
             return ProfileSerializer
         return super().get_serializer_class()
@@ -114,7 +115,8 @@ class UserViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         self.send_verification(request, serializer)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        data = {**serializer.data, 'message': 'Registration successful, kindly check your mail for verification.'}
+        return Response(data, status=status.HTTP_201_CREATED)
 
     def send_verification(self, request, serializer):
         data = serializer.data
@@ -142,9 +144,9 @@ class UserViewSet(GenericViewSet):
                 user.update(is_verified=True)
             return CustomRedirect(os.environ.get("FRONTEND_URL",""))
         except jwt.ExpiredSignatureError as identifier:
-            return Response({'error': 'Activation link expired.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'errors': 'Activation link expired.'}, status=status.HTTP_400_BAD_REQUEST)
         except jwt.exceptions.DecodeError as identifier:
-            return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'errors': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
     
     @action(methods=['post'], detail=False)
     def login(self, request):
@@ -242,18 +244,15 @@ class PasswordResetConfirm(GenericAPIView):
 
     def get(self, request, uidb64, token):
         redirect_url = request.GET.get('redirect_url', '')
+        if not redirect_url:
+            redirect_url = os.environ.get("FRONTEND_URL","")
         try:
             _id = force_str(urlsafe_base64_decode(uidb64))
             user = User.objects.filter(id=_id).first()
         
             if not default_token_generator.check_token(user, token):
-                if len(redirect_url) > 3:
-                    return CustomRedirect(redirect_url + '?token_valid=False')
-                else:
-                    return CustomRedirect(os.environ.get("FRONTEND_URL","") + '?token_valid=False')
-            if redirect_url and len(redirect_url) > 3:    
-                return CustomRedirect(redirect_url + "?token_valid=True&message=Credentials valid&uidb64="+uid64+"&token="+token)
-            return CustomRedirect(os.environ.get("FRONTEND_URL","") + "?token_valid=True&message=Credentials valid&uidb64="+uid64+"&token="+token)
+                return CustomRedirect(redirect_url + '?token_valid=False')  
+            return CustomRedirect(redirect_url + "?token_valid=True&message=Credentials valid&uidb64="+uid64+"&token="+token)
         except DjangoUnicodeDecodeError:
             return CustomRedirect(redirect_url + '?token_valid=False')
 

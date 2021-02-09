@@ -26,20 +26,17 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
-        
+
     def get_photo(self, obj):
         if obj.file:
             return obj.file.url
         return obj.social_thumb
 
-    # def update(self, instance, validated_data):
-        
-    #     instance.full_name = validated_data.get('full_name', instance.full_name)
-    #     instance.proflie_photo = validated_data.get('file', instance.file)
-    #     instance.phone_number = validated_data.get('phone_number', instance.phone_number)
-    #     instance.dob = validated_data.get('dob', instance.dob)
+class ProfileUpdateSerializer(serializers.ModelSerializer):
 
-    #     return instance
+    class Meta:
+        model = Profile
+        exclude = ['user', 'social_thumb']
 
 class UserSerializer(serializers.ModelSerializer):
     
@@ -49,7 +46,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class RegisterSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
-        max_length=68, min_length=8, write_only=True)
+        max_length=15, min_length=8, write_only=True)
     password2 = serializers.CharField(
         required=True, write_only=True)
 
@@ -72,7 +69,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
-    password = serializers.CharField(max_length=68, min_length=5, write_only=True)
+    password = serializers.CharField(max_length=15, min_length=5, write_only=True)
     tokens = serializers.SerializerMethodField()
 
     class Meta:
@@ -152,7 +149,7 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
 
 class PasswordSerializer(serializers.Serializer):
 
-    password = serializers.CharField(min_length=6, max_length=68, write_only=True)
+    password = serializers.CharField(min_length=8, max_length=15, write_only=True)
     token = serializers.CharField(required=True, write_only=True)
     uidb64 = serializers.CharField(required=True, write_only=True)
 
@@ -192,11 +189,4 @@ class LogoutSerializer(serializers.Serializer):
             RefreshToken(self.token).blacklist()
         
         except TokenError:
-            self.fail('bad_token')      
-
-class SocialSerializer(serializers.Serializer):
-    """
-    Serializer which accepts an OAuth2 access token.
-    """
-    provider = serializers.CharField(max_length=255, required=True)
-    access_token = serializers.CharField(max_length=4096, required=True, trim_whitespace=True)
+            self.fail('bad_token')

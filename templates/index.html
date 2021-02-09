@@ -307,7 +307,14 @@
                                 con = document.querySelector('form')
                                 p = document.createElement('P');
                                 p.className = "text-success d-block mb-0";
-                                p.innerHTML += "<strong class='d-block'>registration successful, kindly check your mail for verification.</strong>"
+                                p.innerHTML += "<strong class='d-block'>" + result['message'] + "</strong>"
+                                con.append(p);
+                            }
+                            else if(result['errors']['detail'] !== undefined){
+                                con = document.querySelector('form')
+                                p = document.createElement('P');
+                                p.className = "invalid-feedback d-block mb-0";
+                                p.innerHTML += "<strong class='d-block'>" + result['errors']['detail'] + "</strong>"
                                 con.append(p);
                             }
                             else{
@@ -366,6 +373,7 @@
                         {% endif %}
                     },
                     loginuser(code){
+                        this.form = false
                         let provider = localStorage.getItem("provider")
                         let data = {
                                 'provider': provider,
@@ -387,7 +395,6 @@
                         })
                         .then(result => {
                             if(result['errors'] === undefined){
-                                this.form = false
                                 clearTimeout(this.refreshtokentimer)
                                 this.refreshtokentimer
                                 this.tokenexpired = false
@@ -415,6 +422,7 @@
                         .then((response)=>{
                             this.showprofile = false
                             this.form = true
+                            this.login = true
                         })
                     },
                     userprofile(){
