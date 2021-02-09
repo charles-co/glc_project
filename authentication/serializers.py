@@ -28,6 +28,7 @@ class ProfileSerializer(serializers.ModelSerializer):
         return obj.user.email
         
     def get_photo(self, obj):
+        return ""
         if obj.file:
             return obj.file.url
         return obj.social_thumb
