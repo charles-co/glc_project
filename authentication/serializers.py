@@ -18,17 +18,16 @@ User = get_user_model()
 
 class ProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
-    photo = serializers.SerializerMethodField()
+    #photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['full_name', 'email', 'photo', 'phone_number', 'dob',]
+        fields = ['full_name', 'email', 'phone_number', 'dob',]
 
     def get_email(self, obj):
         return obj.user.email
         
     def get_photo(self, obj):
-        return ""
         if obj.file:
             return obj.file.url
         return obj.social_thumb
