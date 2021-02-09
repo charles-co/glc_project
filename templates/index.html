@@ -303,11 +303,12 @@
                             return response.json()
                         })
                         .then(result => {
+                            console.log(result)
                             if(result['errors'] === undefined){
                                 con = document.querySelector('form')
                                 p = document.createElement('P');
                                 p.className = "text-success d-block mb-0";
-                                p.innerHTML += "<strong class='d-block'>" + result['message'] + "</strong>"
+                                p.innerHTML += "<strong class='d-block'>" + result['data']['message'] + "</strong>"
                                 con.append(p);
                             }
                             else if(result['errors']['detail'] !== undefined){
