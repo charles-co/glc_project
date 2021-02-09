@@ -26,6 +26,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def get_email(self, obj):
         return obj.user.email
+        
     def get_photo(self, obj):
         if obj.file:
             return obj.file.url

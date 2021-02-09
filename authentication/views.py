@@ -183,7 +183,6 @@ class UserViewSet(GenericViewSet):
         profile = self.get_object()
         serializer = self.get_serializer(profile)
         return Response(serializer.data, status=status.HTTP_200_OK)
-        # return Response({'error': 'lol'}, status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['post'], detail=False, url_path="request-password-reset",)
     def request_password_reset(self, request):
