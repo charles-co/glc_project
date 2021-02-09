@@ -1,6 +1,6 @@
 from .base import *
 
-DEBUG = bool(os.environ.get("DEBUG"))
+DEBUG = False
 
 ALLOWED_HOSTS = ["*.herokuapp.com"]
 
