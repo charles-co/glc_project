@@ -287,7 +287,7 @@
                         let formData = new FormData(e.target)
                         data = {
                             'email': formData.get('email'),
-                            'password': formData.get('password')
+                            'password': formData.get('password'),
                             'password2': formData.get('password2')
                         }
                         fetch(endpoint, {
