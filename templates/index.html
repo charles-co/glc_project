@@ -219,13 +219,17 @@
                         this.formErrorReset()
                         let endpoint = '/api/auth/login/'
                         let formData = new FormData(e.target)
+                        data = {
+                            'email': formData.get('email'),
+                            'password': formData.get('password')
+                        }
                         fetch(endpoint, {
                             method: 'POST',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify(Object.fromEntries(formData)),
+                            body: JSON.stringify(data),
                             credentials: 'same-origin',
                         })
                         .then(response => {
@@ -281,13 +285,18 @@
                         this.formErrorReset()
                         let endpoint = '/api/auth/register/'
                         let formData = new FormData(e.target)
+                        data = {
+                            'email': formData.get('email'),
+                            'password': formData.get('password')
+                            'password2': formData.get('password2')
+                        }
                         fetch(endpoint, {
                             method: 'POST',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/json',
                             },
-                            body: JSON.stringify(Object.fromEntries(formData)),
+                            body: JSON.stringify(data),
                             credentials: 'same-origin',
                         })
                         .then(response => {
