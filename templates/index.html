@@ -85,17 +85,22 @@
     </head>
     <body>
         <div id="mainwrapper" class="container-fluid px-0 main-wrapper">    
+            <a href="{% url 'schema-swagger-ui' %}" class="font-weight-bold bg-white">API</a>
             <div class="d-flex flex-column justify-content-center min-vh-100 wrapper">
                 <div class="container">
                     <div class="row no-gutters justify-content-center overflow-hidden">
                         <transition-group appear mode="out-in" tag="div" class="col-11 col-md-6 col-lg-5 col-xl-4" appear-active-class="animate__animated animate__zoomIn animate__slow" enter-active-class="animate__animated animate__fadeInUp animate__slow animate__delay-1s" leave-active-class="animate__animated animate__fadeOutUp">
-                            <div key="signinform" class="card shadow border-0 rounded" v-if="signup">
-                                    <div class="d-flex justify-content-between align-items-center card-header font-weight-bold text-info">
+                            <div key="forms" class="card shadow border-0 rounded" v-if="form">
+                                    <div v-if="signup" class="d-flex justify-content-between align-items-center card-header font-weight-bold text-info">
                                         <p class="mb-0">GLC Sign-up</p>
                                         <button type="button" class="btn btn-danger font-weight-bold" @click="switchform">Login&nbsp;&nbsp;<i class="fas fa-user-circle"></i></button>
                                     </div>
-                                    <div class="card-body">
-                                        <form method="POST" @submit.prevent="register($event)">
+                                    <div v-if="login" class="d-flex justify-content-between align-items-center card-header font-weight-bold text-info">
+                                        <p class="mb-0">GLC Log-in</p>
+                                        <button type="button" class="btn btn-success font-weight-bold" @click="switchform">Sign-up&nbsp;&nbsp;<i class="fas fa-user-circle"></i></button>
+                                    </div>
+                                    <transition-group appear mode="out-in" tag="div" class="card-body overflow-hidden" appear-active-class="animate__animated animate__fadeIn animate__delay-2s animate__slow" enter-active-class="animate__animated animate__fadeInRight animate__fast animate__delay-1s" leave-active-class="animate__animated animate__faster animate__fadeOutLeft">
+                                        <form key="signinform" class="" v-if="signup" method="POST" @submit.prevent="register($event)">
                                             <div class="form-group" id="email">
                                                 <input type="email" name="email" class="form-control rounded-0" aria-describedby="emailHelp" placeholder="Enter email">
                                                 <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
@@ -108,19 +113,7 @@
                                             </div>
                                             <button type="submit" class="btn btn-primary font-weight-bold float-right">Submit</button>
                                         </form>
-                                    </div>
-                                    <div class="card-footer rounded-bottom bg-dark">
-                                        <button @click="googleauth" type="button" class="btn btn-block btn-outline-warning rounded-0 text-white font-weight-bold bg-danger">Log-in with Google <i class="fab fa-google"></i></button>
-                                        <button @click="facebookauth" type="button" class="btn btn-block btn-outline-light rounded-0 text-white font-weight-bold bg-primary">Log-in with Facebook <i class="fab fa-facebook-square"></i></button>
-                                    </div>
-                            </div>
-                            <div key="loginform" class="card shadow border-0 rounded" v-if="login">
-                                <div class="d-flex justify-content-between align-items-center card-header font-weight-bold text-info">
-                                        <p class="mb-0">GLC Log-in</p>
-                                        <button type="button" class="btn btn-success font-weight-bold" @click="switchform">Sign-up&nbsp;&nbsp;<i class="fas fa-user-circle"></i></button>
-                                </div>
-                                <div class="card-body">
-                                        <form method="POST" @submit.prevent="loginauth($event)">
+                                        <form v-else key="loginform" class="" method="POST" @submit.prevent="loginauth($event)">
                                             <div class="form-group" id="email">
                                                 <input type="email" name="email" class="form-control rounded-0" aria-describedby="emailHelp" placeholder="Enter email">
                                             </div>
@@ -131,10 +124,33 @@
                                                 <button type="submit" class="btn btn-primary float-right font-weight-bold">Submit</button>
                                             </div>
                                         </form>
-                                </div>
-                                <div class="card-footer rounded-bottom bg-dark">
+                                    </transition-group>
+                                    <div class="card-footer rounded-bottom bg-dark">
                                         <button @click="googleauth" type="button" class="btn btn-block btn-outline-warning rounded-0 text-white font-weight-bold bg-danger">Log-in with Google <i class="fab fa-google"></i></button>
                                         <button @click="facebookauth" type="button" class="btn btn-block btn-outline-light rounded-0 text-white font-weight-bold bg-primary">Log-in with Facebook <i class="fab fa-facebook-square"></i></button>
+                                    </div>
+                            </div>
+                            <div key="profile" class="card shadow border-0 rounded" v-if="showprofile">
+                                <div class="d-flex justify-content-between align-items-center card-header font-weight-bold text-info">
+                                    <p class="mb-0">Profile</p>
+                                    <button type="button" class="btn btn-danger font-weight-bold" @click="logout">Log-out&nbsp;&nbsp;<i class="fas fa-running"></i></button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-6 mx-auto col-lg-6">
+                                            <div class="d-flex justify-content-center overflow-hidden">
+                                                <img :src="profile.photo" class="img-fluid mx-auto img-thumbnail animate__animated animate__slideInUp animate__delay-2s" :alt="profile.full_name">
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex flex-column text-info">
+                                                <span class="my-2"><i class="fas fa-user"></i>:&nbsp;&nbsp;&nbsp;[[ profile.full_name ]]</span>
+                                                <span class="my-2"><i class="fas fa-envelope-square"></i>:&nbsp;&nbsp;&nbsp;[[ profile.email ]]</span>
+                                                <span class="my-2"><i class="fas fa-phone-square"></i>:&nbsp;&nbsp;&nbsp;[[ profile.phone_number ]]</span>
+                                                <span class="mt-2"><i class="fas fa-calendar-day"></i>:&nbsp;&nbsp;&nbsp;[[ profile.dob ]]</span>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </transition-group>
@@ -170,27 +186,22 @@
                 data() {
                     return {
                         mainloading: true,
-                        signup: true,
-                        login: false,
-                        tokenexpired: false,
+                        signup: false,
+                        login: true,
+                        form: true,
+                        showprofile: false,
+                        tokenexpired: true,
                         profile: {},
                     }
                 },
                 filters: {
                 },
                 watch: {
-                    tokenexpired: function(newbool, oldbool){
-                        if (newbool){
-                            this.refreshtoken();
-                        }
-                    },
                 },
                 computed: {
                 },
                 created(){
-                    this.refreshtokentimer = setTimeout( function(){
-                        this.tokenexpired = true
-                    }, 600000)
+                    this.refreshtokentimer = ""
                 },
                 mounted(){
                     let temp = this.getParams(window.location.href)
@@ -208,13 +219,11 @@
                         this.formErrorReset()
                         let endpoint = '/api/auth/login/'
                         let formData = new FormData(e.target)
-                        console.log(JSON.stringify(Object.fromEntries(formData)))
                         fetch(endpoint, {
                             method: 'POST',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}'
                             },
                             body: JSON.stringify(Object.fromEntries(formData)),
                             credentials: 'same-origin',
@@ -224,14 +233,12 @@
                         })
                         .then(result => {
                             if(result['errors'] === undefined){
-                                this.signup = false
-                                this.login = false
+                                this.form = false
                                 clearTimeout(this.refreshtokentimer)
                                 this.refreshtokentimer
                                 this.tokenexpired = false
                                 localStorage.setItem("refresh", result.data['refresh'])
                                 localStorage.setItem("token", result.data['token'])
-        
                                 this.userprofile()
                             }
                             else if(result['errors']['detail'] !== undefined){
@@ -240,19 +247,18 @@
                                 p.className = "invalid-feedback d-block mb-0";
                                 p.innerHTML += "<strong class='d-block'>" + result['errors']['detail'] + "</strong>"
                                 con.append(p);
-
                             }
                             else{
                                 this.formErrors(result.errors);
                             }
                         })
                     },
-                    refreshtokenn(){
+                    refreshtoken(){
                         let endpoint = '/token/refresh/'
                         data = {
                             'refresh': localStorage.getItem("refresh")
                         }
-                        fetch(endpoint, {
+                        return fetch(endpoint, {
                             method: 'POST',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
@@ -266,7 +272,9 @@
                             return response.json()
                         })
                         .then(result => {
+                            this.tokenexpired = false
                             localStorage.setItem("token", result['access'])
+                            return result['access']
                         })
                     },
                     register(e){
@@ -278,7 +286,6 @@
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}'
                             },
                             body: JSON.stringify(Object.fromEntries(formData)),
                             credentials: 'same-origin',
@@ -288,7 +295,11 @@
                         })
                         .then(result => {
                             if(result['errors'] === undefined){
-                                console.log(result)
+                                con = document.querySelector('form')
+                                p = document.createElement('P');
+                                p.className = "text-success d-block mb-0";
+                                p.innerHTML += "<strong class='d-block'>registration successful, kindly check your mail for verification.</strong>"
+                                con.append(p);
                             }
                             else{
                                 this.formErrors(result.errors);
@@ -309,7 +320,7 @@
                                     con.append(p);
                                 }
                             }
-                            catch{
+                            catch(error){
                                 console.log("")
                             }
                         }
@@ -349,15 +360,15 @@
                         let provider = localStorage.getItem("provider")
                         let data = {
                                 'provider': provider,
-                                'code': code
+                                'code': code,
+                                'redirect_uri': window.location.href.split("?")[0].slice(0, -1)
                             }
-                        let endpoint = '/api/auth/social/login/'
+                        let endpoint = '/api/auth/login/social/' + provider
                         fetch(endpoint, {
                             method: 'POST',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
                                 'Content-Type': 'application/json',
-                                'X-CSRFToken': '{{ csrf_token }}'
                             },
                             body: JSON.stringify(data),
                             credentials: 'same-origin',
@@ -367,42 +378,60 @@
                         })
                         .then(result => {
                             if(result['errors'] === undefined){
-                                this.signup = false
-                                this.login = false
+                                this.form = false
                                 clearTimeout(this.refreshtokentimer)
                                 this.refreshtokentimer
                                 this.tokenexpired = false
-                                localStorage.setItem("refresh", result.data['refresh'])
-                                localStorage.setItem("token", result.data['token'])
+                                localStorage.setItem("refresh", result['refresh'])
+                                localStorage.setItem("token", result['token'])
                                 this.userprofile()
                             }
                         })
                     },
+                    logout(){
+                        data = {
+                            'refresh': localStorage.getItem("refresh")
+                        }
+                        data2 = localStorage.getItem("token")
+                        let endpoint = '/api/auth/logout/'
+                        fetch(endpoint, {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${data2}`
+                            },
+                            body: JSON.stringify(data)
+                        })
+                        .then((response)=>{
+                            this.showprofile = false
+                            this.form = true
+                        })
+                    },
                     userprofile(){
-                        console.log("userprofile")
-                        console.log(this.tokenexpired)
                         let endpoint = '/api/auth/profile/'
                         if(this.tokenexpired){
-                            this.refreshtoken()    
+                            this.refreshtoken().then(result => {
+                                console.log("")
+                            })  
                         }
-                        setTimeout( function(){
-                            data = localStorage.getItem("token")
-                            fetch(endpoint, {
-                                method: 'GET',
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                    'Content-Type': 'application/json',
-                                    'Bearer': JSON.stringify(data), 
-                                },
-                                credentials: 'same-origin',
-                            })
-                            .then(response => {
-                                return response.json()
-                            })
-                            .then(result => {
-                                console.log(result)
-                            })
-                        }.bind(this), 2000)
+                        data = localStorage.getItem("token")
+                        fetch(endpoint, {
+                            method: 'GET',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'Content-Type': 'application/json',
+                                'Authorization': `Bearer ${data}`, 
+                            },
+                            credentials: 'same-origin',
+                        })
+                        .then(response => {
+                            return response.json()
+                        })
+                        .then(result => {
+                            this.profile = result.data
+                            this.showprofile = true
+                        })
                     },
                     getParams(url){
                         var params = {};

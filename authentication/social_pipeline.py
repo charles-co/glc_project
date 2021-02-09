@@ -34,8 +34,7 @@ def save_profile(backend, user, details, response, *args, **kwargs):
             elif not social_thumb:
                 social_thumb = 'http://www.gravatar.com/avatar/'
                 social_thumb += hashlib.md5(user.email.lower().encode('utf8')).hexdigest()
-                social_thum
-                b += '?size=100'
+                social_thumb += '?size=100'
             if social_thumb or name:
                 if social_thumb:
                     profile.social_thumb = social_thumb

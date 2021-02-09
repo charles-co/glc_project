@@ -18,13 +18,18 @@ User = get_user_model()
 
 class ProfileSerializer(serializers.ModelSerializer):
     email = serializers.SerializerMethodField()
+    photo = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['full_name', 'email', 'file', 'phone_number', 'dob',]
+        fields = ['full_name', 'email', 'photo', 'phone_number', 'dob',]
 
     def get_email(self, obj):
         return obj.user.email
+    def get_photo(self, obj):
+        if obj.file:
+            return obj.file.url
+        return obj.social_thumb
 
     # def update(self, instance, validated_data):
         
@@ -66,7 +71,7 @@ class RegisterSerializer(serializers.ModelSerializer):
 
 class LoginSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(max_length=255)
-    password = serializers.CharField(max_length=68, min_length=6, write_only=True)
+    password = serializers.CharField(max_length=68, min_length=5, write_only=True)
     tokens = serializers.SerializerMethodField()
 
     class Meta:
