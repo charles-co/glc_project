@@ -175,7 +175,7 @@ class PasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)
 
-class ChangePasswordSerializer(serializers.Serializer):
+class ChangePasswordSerializer(serializers.ModelSerializer):
     
     password = serializers.CharField(write_only=True, min_length=8, max_length=15)
     password2 = serializers.CharField(write_only=True, min_length=8, max_length=15)

@@ -218,7 +218,7 @@ class UserViewSet(GenericViewSet):
         instance = request.user
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        self.perform_update(serializer)
         return Response({'success': True, 'message': 'Password change successful'}, status=status.HTTP_200_OK)
 
     @action(methods=['put'], detail=False, url_path="profile/update/complete", 
