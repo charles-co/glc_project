@@ -20,6 +20,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import FormParser, MultiPartParser
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
+from rest_framework_simplejwt.authentication import AUTH_HEADER_TYPES
+from rest_framework_simplejwt.exceptions import InvalidToken, TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 
 import jwt
@@ -31,9 +33,10 @@ from drf_yasg import openapi
 from .models import Profile
 from .permissions import IsOwner
 from .renderers import UserRenderer
-from .serializers import (LoginSerializer, ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, 
+from .serializers import (ChangePasswordSerializer, LoginSerializer, PasswordResetConfirmSerializer,
+                            ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, 
                             ResetPasswordEmailRequestSerializer, UserSerializer, 
-                            PasswordSerializer, LogoutSerializer, ResendVerification,)
+                            PasswordSerializer, LogoutSerializer, ResendVerification, TokenRefreshSerializer)
 from .utils import Util
 
 User = get_user_model()
@@ -65,7 +68,7 @@ class UserViewSet(GenericViewSet):
     def get_serializer_class(self):
         actions = ['register', 'login', 
                     'request_password_reset', 'set_password', 
-                    'logout', 'user', 'resend_verification', 'social']
+                    'logout', 'user', 'resend_verification', 'change_password']
         if self.action == actions[0]:
             return RegisterSerializer
         elif self.action == actions[1]:
@@ -81,7 +84,7 @@ class UserViewSet(GenericViewSet):
         elif self.action == actions[6]:
             return ResendVerification
         elif self.action == actions[7]:
-            return SocialSerializer
+            return ChangePasswordSerializer
         elif "update" in self.action:
             return ProfileUpdateSerializer 
         else:
@@ -205,6 +208,19 @@ class UserViewSet(GenericViewSet):
         serializer.is_valid(raise_exception=True)
         return Response({'success': True, 'message': 'Password reset successful'}, status=status.HTTP_200_OK)
 
+    @action(methods=['patch'], detail=False, url_path="change-password", permission_classes=[IsAuthenticated,])
+    def change_password(self, request):
+        """
+        Change password for already logged in user
+        old password has to be correct for password to be changed. 
+        """
+        partial = True
+        instance = request.user
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({'success': True, 'message': 'Password change successful'}, status=status.HTTP_200_OK)
+
     @action(methods=['put'], detail=False, url_path="profile/update/complete", 
     permission_classes=[IsAuthenticated, IsOwner,], parser_classes=[FormParser, MultiPartParser,])
     def update_profile(self, request, *args, **kwargs):
@@ -240,7 +256,7 @@ class UserViewSet(GenericViewSet):
 
 class PasswordResetConfirm(GenericAPIView):
 
-    serializer_class = None
+    serializer_class = PasswordResetConfirmSerializer
 
     def get(self, request, uidb64, token):
         redirect_url = request.GET.get('redirect_url', '')
@@ -256,3 +272,33 @@ class PasswordResetConfirm(GenericAPIView):
         except DjangoUnicodeDecodeError:
             return CustomRedirect(redirect_url + '?token_valid=False')
 
+class TokenViewBase(GenericAPIView):
+    permission_classes = ()
+    authentication_classes = ()
+
+    serializer_class = None
+
+    www_authenticate_realm = 'api'
+
+    def get_authenticate_header(self, request):
+        return '{0} realm="{1}"'.format(
+            AUTH_HEADER_TYPES[0],
+            self.www_authenticate_realm,
+        )
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+
+        try:
+            serializer.is_valid(raise_exception=True)
+        except TokenError as e:
+            raise InvalidToken(e.args[0])
+
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
+
+class TokenRefreshView(TokenViewBase):
+    """
+    Takes a refresh type JSON web token and returns an access type JSON web
+    token if the refresh token is valid.
+    """
+    serializer_class = TokenRefreshSerializer

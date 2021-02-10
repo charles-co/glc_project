@@ -8,6 +8,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode, url_
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from sorl_thumbnail_serializer.fields import HyperlinkedSorlImageField
+from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 import json
@@ -60,7 +61,8 @@ class RegisterSerializer(serializers.ModelSerializer):
 
         if password != password2:
             raise serializers.ValidationError(
-            "Password field didn't match.")
+                {"password": "Password fields didn't match."}
+            )
         return attrs
     
     def create(self, validated_data):
@@ -113,10 +115,10 @@ class ResendVerification(serializers.Serializer):
         user = User.objects.filter(email=email)
         if not user.exists():
             raise serializers.ValidationError(
-            "You don't have an account.")
+            {"email": "You don't have an account."})
         if user.first().is_verified == True:
             raise serializers.ValidationError(
-            "Your account has been verified.")
+            {"email": "Your account has alredy been verified."})
         return attrs
 
 class ResetPasswordEmailRequestSerializer(serializers.Serializer):
@@ -173,6 +175,36 @@ class PasswordSerializer(serializers.Serializer):
             raise AuthenticationFailed('The reset link is invalid', 401)
         return super().validate(attrs)
 
+class ChangePasswordSerializer(serializers.Serializer):
+    
+    password = serializers.CharField(write_only=True, min_length=8, max_length=15)
+    password2 = serializers.CharField(write_only=True, min_length=8, max_length=15)
+    old_password = serializers.CharField(write_only=True, min_length=8, max_length=15)
+
+    class Meta:
+        model = User
+        fields = ['old_password', 'password', 'password2']
+
+    def validate(self, attrs):
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({"password": "Password fields didn't match."})
+        if attrs['password'] == attrs['old_password']:
+            raise serializers.ValidationError({"password": "Please set new password."})
+        return attrs
+
+    def validate_old_password(self, value):
+
+        user = self.context['request'].user
+        if not user.check_password(value):
+            raise serializers.ValidationError({"old_password": "Old password is not correct."})
+        return value
+    
+    def update(self, instance, validated_data):
+        instance.set_password(validated_data['password'])
+        instance.save()
+
+        return instance
+
 class LogoutSerializer(serializers.Serializer):
 
     refresh = serializers.CharField()
@@ -190,3 +222,31 @@ class LogoutSerializer(serializers.Serializer):
         
         except TokenError:
             self.fail('bad_token')
+
+class TokenRefreshSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    def validate(self, attrs):
+        refresh = RefreshToken(attrs['refresh'])
+
+        data = {'token': str(refresh.access_token)}
+
+        if api_settings.ROTATE_REFRESH_TOKENS:
+            if api_settings.BLACKLIST_AFTER_ROTATION:
+                try:
+                    # Attempt to blacklist the given refresh token
+                    refresh.blacklist()
+                except AttributeError:
+                    # If blacklist app not installed, `blacklist` method will
+                    # not be present
+                    pass
+
+            refresh.set_jti()
+            refresh.set_exp()
+
+            data['refresh'] = str(refresh)
+
+        return data
+
+class PasswordResetConfirmSerializer(serializers.Serializer):
+    pass
