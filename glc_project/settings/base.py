@@ -79,31 +79,6 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
-MATERIAL_ADMIN_SITE = {
-    'HEADER':  _('GLC'),  # Admin site header
-    'TITLE':  _('GLC'),  # Admin site title
-    #'FAVICON':  'image/church.png',  # Admin site favicon (path to static should be specified)
-    'MAIN_BG_COLOR':  '#F15922',  # Admin site main color, css color should be specified
-    'MAIN_HOVER_COLOR':  '#FFC50C',  # Admin site main hover color, css color should be specified
-    'PROFILE_PICTURE':  static('image/logo.jpg'),  # Admin site profile picture (path to static should be specified)
-    #'PROFILE_BG':  'image/background3.jpg',  # Admin site profile background (path to static should be specified)
-    #'LOGIN_LOGO':  'image/logo.jpg',  # Admin site logo on login page (path to static should be specified)
-    #'LOGOUT_BG':  'image/background.jpeg',  # Admin site background on login/logout pages (path to static should be specified)
-    'SHOW_THEMES':  True,  #  Show default admin themes button
-    'TRAY_REVERSE': False,  # Hide object-tools and additional-submit-line by default
-    'NAVBAR_REVERSE': False,  # Hide side navbar by default
-    'SHOW_COUNTS': True, # Show instances counts for each model
-    'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
-        'authentication_and_authorization': 'verified',
-    },
-    'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
-        'user': 'account_circle',
-        'profile': 'person',
-        'group': 'groups',
-
-    }
-}
-
 CORS_ORIGIN_ALLOW_ALL = True
 
 # CORS_ORIGIN_WHITELIST = []
@@ -254,3 +229,28 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static/'
+
+MATERIAL_ADMIN_SITE = {
+    'HEADER':  _('GLC'),  # Admin site header
+    'TITLE':  _('GLC'),  # Admin site title
+    #'FAVICON':  'image/church.png',  # Admin site favicon (path to static should be specified)
+    'MAIN_BG_COLOR':  '#F15922',  # Admin site main color, css color should be specified
+    'MAIN_HOVER_COLOR':  '#FFC50C',  # Admin site main hover color, css color should be specified
+    'PROFILE_PICTURE':  static('image/logo.jpg'),  # Admin site profile picture (path to static should be specified)
+    #'PROFILE_BG':  'image/background3.jpg',  # Admin site profile background (path to static should be specified)
+    #'LOGIN_LOGO':  'image/logo.jpg',  # Admin site logo on login page (path to static should be specified)
+    #'LOGOUT_BG':  'image/background.jpeg',  # Admin site background on login/logout pages (path to static should be specified)
+    'SHOW_THEMES':  True,  #  Show default admin themes button
+    'TRAY_REVERSE': False,  # Hide object-tools and additional-submit-line by default
+    'NAVBAR_REVERSE': False,  # Hide side navbar by default
+    'SHOW_COUNTS': True, # Show instances counts for each model
+    'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
+        'authentication_and_authorization': 'verified',
+    },
+    'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
+        'user': 'account_circle',
+        'profile': 'person',
+        'group': 'groups',
+
+    }
+}
