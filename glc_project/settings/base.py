@@ -37,9 +37,9 @@ AUTH_USER_MODEL = 'authentication.User'
 INSTALLED_APPS = [
     # 'admin_interface',
     # 'colorfield',
-    'django.contrib.admin',
-    #'material.admin',
-    #'material.admin.default',
+    # 'django.contrib.admin',
+    'material.admin',
+    'material.admin.default',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
