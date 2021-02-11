@@ -78,8 +78,8 @@ MATERIAL_ADMIN_SITE = {
     'LOGIN_LOGO':  'image/logo.jpg/',  # Admin site logo on login page (path to static should be specified)
     'LOGOUT_BG':  'image/background.jpeg/',  # Admin site background on login/logout pages (path to static should be specified)
     'SHOW_THEMES':  True,  #  Show default admin themes button
-    'TRAY_REVERSE': True,  # Hide object-tools and additional-submit-line by default
-    'NAVBAR_REVERSE': True,  # Hide side navbar by default
+    'TRAY_REVERSE': False,  # Hide object-tools and additional-submit-line by default
+    'NAVBAR_REVERSE': False,  # Hide side navbar by default
     'SHOW_COUNTS': True, # Show instances counts for each model
     'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
         'authentication_and_authorization': 'verified',
