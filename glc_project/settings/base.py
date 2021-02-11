@@ -107,11 +107,6 @@ TEMPLATES = [
         'DIRS': [TEMPLATE_DIR],
         'APP_DIRS': True,
         'OPTIONS': {
-            # 'loaders': [
-            #     'apptemplates.Loader',
-            #     'django.template.loaders.filesystem.Loader',
-            #     'django.template.loaders.app_directories.Loader',
-            # ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -184,7 +179,6 @@ SOCIAL_AUTH_PIPELINE = (
 
 
 
-# REST_SOCIAL_OAUTH_LOGIN_REDIRECT_URI = '/'
 SOCIAL_AUTH_REDIRECT_IS_HTTPS = True
 SOCIAL_AUTH_PROTECTED_USER_FIELDS = ['email',]
 # SOCIAL_AUTH_POSTGRES_JSONFIELD = True
@@ -210,11 +204,9 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     ]),
 }
 
-
-
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-     'https://www.googleapis.com/auth/userinfo.email',
-     'https://www.googleapis.com/auth/userinfo.profile',
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile',
 ]
 
 
@@ -234,4 +226,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
