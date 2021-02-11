@@ -51,7 +51,7 @@ urlpatterns = [
             name='login_social_jwt_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-]
+] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler400='rest_framework.exceptions.bad_request'
 handler404='utils.views.error_404'
