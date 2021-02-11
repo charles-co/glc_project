@@ -1,7 +1,7 @@
 from .base import *
 from django.utils.translation import ugettext_lazy as _
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["*.herokuapp.com"]
 
