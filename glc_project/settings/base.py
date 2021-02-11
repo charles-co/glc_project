@@ -223,17 +223,7 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email',]
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['email',]
 
-# SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-SOCIAL_AUTH_GOOGLE_PROFILE_EXTRA_PARAMS = {
-    'fields': ','.join([
-        # public_profile
-        'name', 'first_name', 'last_name', 
-        # extra fields
-        'email',
-    ]),
-}
 SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
     'fields': ','.join([
         # public_profile
@@ -246,7 +236,7 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 
 
-SOCIAL_AUTH_GOOGLE_SCOPE = [
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
      'https://www.googleapis.com/auth/userinfo.email',
      'https://www.googleapis.com/auth/userinfo.profile',
 ]
