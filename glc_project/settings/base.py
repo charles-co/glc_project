@@ -13,6 +13,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import ugettext_lazy as _
+from django.templatetags.static import static
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -84,7 +85,7 @@ MATERIAL_ADMIN_SITE = {
     #'FAVICON':  'image/church.png',  # Admin site favicon (path to static should be specified)
     'MAIN_BG_COLOR':  '#F15922',  # Admin site main color, css color should be specified
     'MAIN_HOVER_COLOR':  '#FFC50C',  # Admin site main hover color, css color should be specified
-    #'PROFILE_PICTURE':  'image/logo.jpg',  # Admin site profile picture (path to static should be specified)
+    'PROFILE_PICTURE':  static('image/logo.jpg'),  # Admin site profile picture (path to static should be specified)
     #'PROFILE_BG':  'image/background3.jpg',  # Admin site profile background (path to static should be specified)
     #'LOGIN_LOGO':  'image/logo.jpg',  # Admin site logo on login page (path to static should be specified)
     #'LOGOUT_BG':  'image/background.jpeg',  # Admin site background on login/logout pages (path to static should be specified)
