@@ -1,4 +1,5 @@
 from .base import *
+import django_heroku
 from django.utils.translation import ugettext_lazy as _
 
 DEBUG = False
@@ -24,6 +25,9 @@ SECURE_FRAME_DENY               = True
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = (
+   os.path.join(BASE_DIR, 'static'),
+)
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
