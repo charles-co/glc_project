@@ -49,7 +49,7 @@ MATERIAL_ADMIN_SITE = {
     'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
         'user': 'account_circle',
         'profile': 'person',
-        'groups': 'groups',
+        'group': 'groups',
 
     }
 }
