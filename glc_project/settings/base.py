@@ -13,8 +13,6 @@ import os
 import django_heroku
 from pathlib import Path
 from datetime import timedelta
-from django.utils.translation import ugettext_lazy as _
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
