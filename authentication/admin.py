@@ -2,7 +2,9 @@ from django.contrib import admin
 from django.contrib.auth import get_user_model
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
-
+from django.urls import reverse
+from django.utils.http import urlencode
+from django.utils.safestring import mark_safe
 from .models import Profile
 from .forms import UserChangeForm, UserCreationForm
 
@@ -18,7 +20,8 @@ class UserAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('email', 'is_verified')
+    list_display = ('email', 'name', 'is_verified', )
+    list_display_links = ('email', 'name',)
     list_filter = ('is_staff', 'is_superuser', 'is_verified', 'is_active', 'groups')
     fieldsets = (
         (None, {'fields': ('email', 'password',)}),
@@ -35,10 +38,28 @@ class UserAdmin(BaseUserAdmin):
     )
     search_fields = ('email',)
     ordering = ('email',)
+    
+    def name(self, obj):
+        url = reverse("admin:authentication_profile_change", args=[obj.profile.id])
+        return mark_safe("<a href='{}'>{}</a>".format(url, obj.profile.full_name))
+
+    name.short_description = 'Name'
+    name.admin_order_field = 'user__profile__name'
     # filter_horizontal = ()
 
 class ProfileAdmin(admin.ModelAdmin):
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if isinstance(obj, Profile):
+            if request.path == reverse("admin:authentication_user_delete", args=[obj.user.id]):
+                return True
+        return False
+
     list_display = ('full_name', 'email', 'dob', 'phone_number', 'is_verified')
+    readonly_fields = ["user",]
     list_display_links = ('full_name', 'email')
 
     def is_verified(self, obj):

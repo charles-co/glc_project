@@ -20,7 +20,6 @@ def save_profile(backend, user, details, response, *args, **kwargs):
         try:
             profile = user.profile
         except:
-            print("created !!")
             profile = Profile(user_id=user.id)
             profile.save()
         if profile:

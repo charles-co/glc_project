@@ -13,6 +13,8 @@ import os
 import django_heroku
 from pathlib import Path
 from datetime import timedelta
+from django.utils.translation import ugettext_lazy as _
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -34,7 +36,11 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
-    'django.contrib.admin',
+    # 'admin_interface',
+    # 'colorfield',
+    # 'django.contrib.admin',
+    'material.admin',
+    'material.admin.default',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -57,6 +63,33 @@ INSTALLED_APPS = [
     'sorl_thumbnail_serializer',
     'django_extensions',
 ]
+
+# X_FRAME_OPTIONS ='SAMEORIGIN'
+
+MATERIAL_ADMIN_SITE = {
+    'HEADER':  _('GLC'),  # Admin site header
+    'TITLE':  _('GLC'),  # Admin site title
+    'FAVICON':  '/image/church.png',  # Admin site favicon (path to static should be specified)
+    'MAIN_BG_COLOR':  '#F15922',  # Admin site main color, css color should be specified
+    'MAIN_HOVER_COLOR':  '#FFC50C',  # Admin site main hover color, css color should be specified
+    'PROFILE_PICTURE':  '/image/logo.jpg',  # Admin site profile picture (path to static should be specified)
+    'PROFILE_BG':  '/image/background3.jpg',  # Admin site profile background (path to static should be specified)
+    'LOGIN_LOGO':  '/image/logo.jpg',  # Admin site logo on login page (path to static should be specified)
+    'LOGOUT_BG':  '/image/background.jpeg',  # Admin site background on login/logout pages (path to static should be specified)
+    'SHOW_THEMES':  True,  #  Show default admin themes button
+    'TRAY_REVERSE': True,  # Hide object-tools and additional-submit-line by default
+    'NAVBAR_REVERSE': True,  # Hide side navbar by default
+    'SHOW_COUNTS': True, # Show instances counts for each model
+    'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
+        'authentication': 'manage_accounts',
+    },
+    'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
+        'user': 'account_circle',
+        'profile': 'person',
+        'groups': 'groups',
+
+    }
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -95,8 +128,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_DIR],
-        'APP_DIRS': True,
+        # 'APP_DIRS': True,
         'OPTIONS': {
+            'loaders': [
+                'apptemplates.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            ],
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -105,7 +143,6 @@ TEMPLATES = [
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
                 'glc_project.context_processors.debug',
-
             ],
         },
     },
@@ -219,7 +256,7 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Africa/Lagos'
 
 USE_I18N = True
 
