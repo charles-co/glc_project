@@ -46,23 +46,12 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
     path('', TemplateView.as_view(template_name='index.html')),
-    # path('api/auth/', include('rest_social_auth.urls_jwt_pair')),
-    # returns jwt + user_data
     re_path(r'^api/auth/login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
             views.SocialJWTPairOnlyAuthView.as_view(),
             name='login_social_jwt_pair'),
-    # returns token + user_data
-    # re_path(r'^social/jwt-pair-user/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
-    #         views.SocialJWTPairUserAuthView.as_view(),
-    #         name='login_social_jwt_pair_user'),
-
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-
 ]
-#urlpatterns += patterns('',
-# (r'^static/(?P.*)$', 'django.views.static.serve', {'document_root': settings.STATIC_ROOT}),
-#)
 
 handler400='rest_framework.exceptions.bad_request'
 handler404='utils.views.error_404'

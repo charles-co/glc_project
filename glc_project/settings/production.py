@@ -22,13 +22,13 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
 SECURE_HSTS_SECONDS             = 1000000
 SECURE_FRAME_DENY               = True
 
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-django_heroku.settings(locals())
-
+django_heroku.settings(locals(), staticfiles=False)
 # MATERIAL_ADMIN_SITE = {
 #     'HEADER':  _('GLC'),  # Admin site header
 #     'TITLE':  _('GLC'),  # Admin site title
