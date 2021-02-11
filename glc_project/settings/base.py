@@ -246,10 +246,10 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 
 
-# SOCIAL_AUTH_FACEBOOK_SCOPE = [
-#     'https://www.googleapis.com/auth/userinfo.email',
-#     'https://www.googleapis.com/auth/userinfo.profile',
-# ]
+SOCIAL_AUTH_GOOGLE_SCOPE = [
+     'https://www.googleapis.com/auth/userinfo.email',
+     'https://www.googleapis.com/auth/userinfo.profile',
+]
 
 
 # Internationalization
