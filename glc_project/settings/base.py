@@ -63,7 +63,6 @@ INSTALLED_APPS = [
 ]
 
 # X_FRAME_OPTIONS ='SAMEORIGIN'
-# from django.templatetags.static import static
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
