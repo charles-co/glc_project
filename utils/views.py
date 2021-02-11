@@ -10,6 +10,6 @@ def error_404(request, exception):
 def error_500(request):
     message=("An error occurred, it's on us :(")
 
-    response = JsonResponse(data={'message': message, 'status_code': 500})
+    response = JsonResponse(data={'message': message, 'request': request, 'status_code': 500})
     response.status_code = 500
     return response
