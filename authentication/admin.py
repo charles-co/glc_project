@@ -45,9 +45,17 @@ class UserAdmin(BaseUserAdmin):
 
     name.short_description = 'Name'
     name.admin_order_field = 'user__profile__name'
+    
+    def get_actions(self, request):
+        actions = super().get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+        return actions
     # filter_horizontal = ()
 
 class ProfileAdmin(admin.ModelAdmin):
+
+    # change_list_template = "admin/change_list_filter_confirm_sidebar.html"
 
     def has_add_permission(self, request):
         return False
@@ -57,10 +65,11 @@ class ProfileAdmin(admin.ModelAdmin):
             if request.path == reverse("admin:authentication_user_delete", args=[obj.user.id]):
                 return True
         return False
-
+    list_filter = ('dob',)
     list_display = ('full_name', 'email', 'dob', 'phone_number', 'is_verified')
     readonly_fields = ["user",]
     list_display_links = ('full_name', 'email')
+    search_fields = ('full_name', 'user__email', 'phone_number')
 
     def is_verified(self, obj):
         return "Yes" if obj.user.is_verified else "No"

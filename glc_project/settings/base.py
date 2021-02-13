@@ -13,7 +13,6 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from django.utils.translation import ugettext_lazy as _
-from django.templatetags.static import static
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -36,11 +35,9 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_interface',
-    # 'colorfield',
-    # 'django.contrib.admin',
-    'material.admin',
-    'material.admin.default',
+    'admin_interface',
+    'colorfield',
+    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -49,8 +46,9 @@ INSTALLED_APPS = [
 
     # apps
     
-    'authentication', 
-    
+    'authentication',
+    'events', 
+
     # third party apps
     'sslserver',
     'drf_yasg',
@@ -64,7 +62,7 @@ INSTALLED_APPS = [
     'django_extensions',
 ]
 
-# X_FRAME_OPTIONS ='SAMEORIGIN'
+X_FRAME_OPTIONS ='SAMEORIGIN'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -76,7 +74,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -104,8 +102,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_DIR],
-        'APP_DIRS': True,
+        # 'APP_DIRS': True,
         'OPTIONS': {
+            'loaders': {
+                'apptemplates.Loader',
+                'django.template.loaders.filesystem.Loader',
+                'django.template.loaders.app_directories.Loader',
+            },
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
@@ -148,8 +151,8 @@ REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'utils.exceptionhandler.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication',
-        # 'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
     ),
 }
 
@@ -229,28 +232,3 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static/'
-
-MATERIAL_ADMIN_SITE = {
-    'HEADER':  _('GLC'),  # Admin site header
-    'TITLE':  _('GLC'),  # Admin site title
-    #'FAVICON':  'image/church.png',  # Admin site favicon (path to static should be specified)
-    'MAIN_BG_COLOR':  '#F15922',  # Admin site main color, css color should be specified
-    'MAIN_HOVER_COLOR':  '#FFC50C',  # Admin site main hover color, css color should be specified
-    'PROFILE_PICTURE':  'images/logo.jpg',  # Admin site profile picture (path to static should be specified)
-    #'PROFILE_BG':  'image/background3.jpg',  # Admin site profile background (path to static should be specified)
-    #'LOGIN_LOGO':  'image/logo.jpg',  # Admin site logo on login page (path to static should be specified)
-    #'LOGOUT_BG':  'image/background.jpeg',  # Admin site background on login/logout pages (path to static should be specified)
-    'SHOW_THEMES':  True,  #  Show default admin themes button
-    'TRAY_REVERSE': False,  # Hide object-tools and additional-submit-line by default
-    'NAVBAR_REVERSE': False,  # Hide side navbar by default
-    'SHOW_COUNTS': True, # Show instances counts for each model
-    'APP_ICONS': {  # Set icons for applications(lowercase), including 3rd party apps, {'application_name': 'material_icon_name', ...}
-        'authentication_and_authorization': 'verified',
-    },
-    'MODEL_ICONS': {  # Set icons for models(lowercase), including 3rd party models, {'model_name': 'material_icon_name', ...}
-        'user': 'account_circle',
-        'profile': 'person',
-        'group': 'groups',
-
-    }
-}

@@ -45,13 +45,14 @@ schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('authentication.urls')),
+    path('', include('events.urls')),
     path('', TemplateView.as_view(template_name='index.html')),
     re_path(r'^api/auth/login/social/(?:(?P<provider>[a-zA-Z0-9_-]+)/?)?$',
             views.SocialJWTPairOnlyAuthView.as_view(),
             name='login_social_jwt_pair'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
     path('redoc/', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
-] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+]
 
 handler400='rest_framework.exceptions.bad_request'
 handler404='utils.views.error_404'
