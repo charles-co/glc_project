@@ -44,6 +44,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    url(r'^chaining/', include('smart_selects.urls')),
     path('', include('authentication.urls')),
     path('', include('events.urls')),
     path('', TemplateView.as_view(template_name='index.html')),

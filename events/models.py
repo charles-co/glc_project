@@ -54,11 +54,13 @@ class Event(models.Model):
     end = models.DateTimeField(_("End"), auto_now=False, auto_now_add=False)
     active = models.BooleanField(_("Active"), default=True)
     reactions = models.ManyToManyField(User, verbose_name=_("reactions"), blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     objects = EventManager()
 
     class Meta:
-        ordering = ['title']
+        ordering = ['start', 'end', 'title']
 
     def __str__(self):
         return self.title

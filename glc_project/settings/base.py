@@ -47,11 +47,13 @@ INSTALLED_APPS = [
     # apps
     
     'authentication',
-    'events', 
+    'events',
+    'bible',
 
     # third party apps
     'sslserver',
     'drf_yasg',
+    'smart_selects',
     'corsheaders',
     'social_django',
     'rest_framework',
@@ -63,6 +65,7 @@ INSTALLED_APPS = [
 ]
 
 X_FRAME_OPTIONS ='SAMEORIGIN'
+USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
