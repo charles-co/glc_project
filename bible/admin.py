@@ -17,8 +17,8 @@ class VerseAdmin(admin.ModelAdmin):
 class TodaysVerseAdmin(admin.ModelAdmin):
     pass
 
-admin.site.register(Bible, BibleAdmin)
-admin.site.register(Book, BookAdmin)
-admin.site.register(Chapter, ChapterAdmin)
-admin.site.register(Verse, VerseAdmin)
+# admin.site.register(Bible, BibleAdmin)
+# admin.site.register(Book, BookAdmin)
+# admin.site.register(Chapter, ChapterAdmin)
+# admin.site.register(Verse, VerseAdmin)
 admin.site.register(TodaysVerse, TodaysVerseAdmin)

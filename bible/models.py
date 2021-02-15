@@ -80,12 +80,13 @@ class TodaysVerse(models.Model):
                                 chained_field="chapter",
                                 chained_model_field="chapter")
     
-    date = models.DateField(_("To be posted on?"), auto_now=False, auto_now_add=False, default=timezone.now)
+    date = models.DateField(_("To be posted on?"), auto_now=False, auto_now_add=False, default=timezone.now, unique=True)
     created_at = models.DateTimeField(_("Created"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated"), auto_now=True)
 
     class Meta:
         verbose_name_plural = "Todays Verse"
+        verbose_name = "Todays Verse"
         ordering = ['date']
     
     def __str__(self):
