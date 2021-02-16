@@ -104,10 +104,10 @@ BATON = {
             { 'type': 'free', 'label': 'Another custom link', 'url': 'http://www.google.it' },
         ] },
     ),
-    'ANALYTICS': {
-        'CREDENTIALS': os.environ.get('GOOGLE_CREDENTIALS'),
-        'VIEW_ID': os.environ.get('VIEW_ID'),
-    }
+    # 'ANALYTICS': {
+    #     'CREDENTIALS': os.environ.get('GOOGLE_CREDENTIALS'),
+    #     'VIEW_ID': os.environ.get('VIEW_ID'),
+    # }
 }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

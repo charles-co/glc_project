@@ -30,6 +30,7 @@ from drf_yasg import openapi
 # admin.site.enable_nav_sidebar = False
 # admin.site.site_header = 'GLC'
 # admin.site.index_title = 'GLC Administration'
+
 schema_view = get_schema_view(
         openapi.Info(
             title="GLC API",
