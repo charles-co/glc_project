@@ -2,7 +2,7 @@ from .base import *
 import django_heroku
 from django.utils.translation import ugettext_lazy as _
 
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*.herokuapp.com"]
 
@@ -110,10 +110,10 @@ BATON = {
     }
 }
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-django_heroku.settings(locals(), staticfiles=False)
+django_heroku.settings(locals())
