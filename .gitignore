@@ -111,7 +111,4 @@ staticfiles/
 **/migrations/**
 !**/migrations
 !**/migrations/__init__.py
-shop/fixtures/rad.json
 rad/settings/local.py
-static/css/bootstrap-icons
-rad/settings/pythonanywhere.py
