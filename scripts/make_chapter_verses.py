@@ -1,3 +1,4 @@
+import os
 import requests
 import time
 from django.db.utils import IntegrityError
@@ -7,6 +8,7 @@ from bible.models import Chapter, Verse
 def run():
     chapters = Chapter.objects.all()
     passed = False
+    key = os.environ.get('BIBLE_KEY')
     for chapter in chapters:
         cid = chapter._id
         if False:#cid !='LAM.3' and passed == False:
@@ -15,7 +17,7 @@ def run():
             passed = True
             url = "https://api.scripture.api.bible/v1/bibles/de4e12af7f28f599-01/chapters/{}/verses".format(cid)
             response = requests.get(url,
-                                headers = {'api-key': '3f79bdeb50374985677ce5d1339205e5'})
+                                headers = {'api-key': key})
             if response.status_code == 200:
                 print('success')
                 kwargs = []

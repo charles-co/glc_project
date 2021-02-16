@@ -23,6 +23,93 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
 SECURE_HSTS_SECONDS             = 1000000
 SECURE_FRAME_DENY               = True
 
+BATON = {
+    'SITE_HEADER': 'GLC',
+    'SITE_TITLE': 'GLC',
+    'INDEX_TITLE': 'GLC administration',
+    'SUPPORT_HREF': 'https://google.com',
+    'COPYRIGHT': 'copyright © 2020 <a href="https://www.google.com">Charles</a>', # noqa
+    'POWERED_BY': '<a href="https://www.google.com">Charles</a>',
+    'CONFIRM_UNSAVED_CHANGES': True,
+    'SHOW_MULTIPART_UPLOADING': True,
+    'ENABLE_IMAGES_PREVIEW': True,
+    'CHANGELIST_FILTERS_IN_MODAL': True,
+    'CHANGELIST_FILTERS_ALWAYS_OPEN': False,
+    'CHANGELIST_FILTERS_FORM': True,
+    'MENU_ALWAYS_COLLAPSED': False,
+    'MENU_TITLE': 'Navigation',
+    'MESSAGES_TOASTS': True,
+    'GRAVATAR_DEFAULT_IMG': 'retro',
+    'LOGIN_SPLASH': '/static/images/background3.jpg',
+    'MENU': (
+        { 'type': 'title', 'label': 'Authentication', 'apps': ('auth', ) },
+        {
+            'type': 'app',
+            'name': 'auth',
+            'label': 'Authentication',
+            'icon': 'fa fa-lock',
+            'models': (
+                {
+                    'name': 'group',
+                    'label': 'Groups'
+                },
+            )
+        },
+        { 'type': 'title', 'label': 'Users', 'apps': ('authentication', ) },
+        {
+            'type': 'app',
+            'name': 'authentication',
+            'label': 'Users & Profiles',
+            'icon': 'fa fa-user',
+            'models': (
+                {
+                    'name': 'user',
+                    'label': 'Users'
+                },
+                {
+                    'name': 'profile',
+                    'label': 'Profiles'
+                },
+            )
+        },
+        { 'type': 'title', 'label': 'Bible', 'apps': ('bible', ) },
+        {
+            'type': 'app',
+            'name': 'bible',
+            'label': 'Bible',
+            'icon': 'fa fa-bible',
+            'models': (
+                {
+                    'name': 'todaysverse',
+                    'label': 'Todays Verse'
+                },
+            )
+        },
+        { 'type': 'title', 'label': 'Events', 'apps': ('events', ) },
+        {
+            'type': 'app',
+            'name': 'events',
+            'label': 'Events',
+            'icon': 'fa fa-church',
+            'models': (
+                {
+                    'name': 'event',
+                    'label': 'Events'
+                },
+            )
+        },
+        { 'type': 'free', 'label': 'Custom Link', 'url': 'http://www.google.it', 'perms': ('flatpages.add_flatpage', 'auth.change_user') },
+        { 'type': 'free', 'label': 'My parent voice', 'default_open': True, 'children': [
+            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events' },
+            { 'type': 'free', 'label': 'Another custom link', 'url': 'http://www.google.it' },
+        ] },
+    ),
+    'ANALYTICS': {
+        'CREDENTIALS': os.environ.get('GOOGLE_CREDENTIALS'),
+        'VIEW_ID': os.environ.get('VIEW_ID'),
+    }
+}
+
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

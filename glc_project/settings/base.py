@@ -35,8 +35,9 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_interface',
-    'colorfield',
+    # 'admin_interface',
+    # 'colorfield',
+    'baton',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -62,9 +63,10 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'sorl_thumbnail_serializer',
     'django_extensions',
+    'baton.autodiscover',
 ]
 
-X_FRAME_OPTIONS ='SAMEORIGIN'
+# X_FRAME_OPTIONS ='SAMEORIGIN'
 USE_DJANGO_JQUERY = True
 
 MIDDLEWARE = [
@@ -105,13 +107,13 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [TEMPLATE_DIR],
-        # 'APP_DIRS': True,
+        'APP_DIRS': True,
         'OPTIONS': {
-            'loaders': {
-                'apptemplates.Loader',
-                'django.template.loaders.filesystem.Loader',
-                'django.template.loaders.app_directories.Loader',
-            },
+            # 'loaders': {
+            #     'apptemplates.Loader',
+            #     'django.template.loaders.filesystem.Loader',
+            #     'django.template.loaders.app_directories.Loader',
+            # },
             'context_processors': [
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',

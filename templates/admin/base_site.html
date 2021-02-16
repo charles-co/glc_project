@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+{% load static baton_tags %}
+{% load i18n %}
+{% block extrastyle %}
+<style>
+    @import url('https://fonts.googleapis.com/css?family=Quicksand:400,500,700');
+    @import url('https://fonts.googleapis.com/css2?family=Faster+One&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap');
+
+    html,
+    body {
+        font-family: "Quicksand", sans-serif;
+    }
+    .fancy-font {
+        font-family: "Faster One"; 
+    }
+</style>
+{% endblock %}
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block extrahead %}
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <script src="{% static 'baton/app/dist/baton.min.js' %}"></script>
+    <!-- <script src="http://localhost:8080/dist/baton.min.js"></script> -->
+    {% baton_config as conf %}
+    {{ conf | json_script:"baton-config" }}
+    <script>
+        (function ($, undefined) {
+            $(document).ready(function () {
+                Baton.init(JSON.parse(document.getElementById('baton-config').textContent));
+            })
+        })(jQuery, undefined)
+    </script>
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}" class="fancy-font text-light"><img class="img-fluid rounded" height="50" width="50" src="{% static 'images/logo.jpg' %}" /></a></h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+{% block footer %}
+    {% footer %}
+{% endblock %}

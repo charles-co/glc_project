@@ -16,19 +16,20 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls import url
 from django.conf.urls.static import static
-from django.contrib import admin
+# from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic.base import TemplateView
 
 from rest_framework import permissions 
-from rest_social_auth import views 
+from rest_social_auth import views
 
+from baton.autodiscover import admin
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
-admin.site.enable_nav_sidebar = False
-admin.site.site_header = 'GLC'
-admin.site.index_title = 'GLC Administration'
+# admin.site.enable_nav_sidebar = False
+# admin.site.site_header = 'GLC'
+# admin.site.index_title = 'GLC Administration'
 schema_view = get_schema_view(
         openapi.Info(
             title="GLC API",
@@ -44,6 +45,7 @@ schema_view = get_schema_view(
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('baton/', include('baton.urls')),
     url(r'^chaining/', include('smart_selects.urls')),
     path('', include('authentication.urls')),
     path('', include('events.urls')),

@@ -55,7 +55,7 @@ class Bible(models.Model):
     dblId = models.CharField(max_length=25)
     name = models.CharField(max_length=50)
     abbreviation = models.CharField(max_length=15)
-    book = models.ManyToManyField(Book, verbose_name=_("Books"), related_name="books")
+    # book = models.ManyToManyField(Book, verbose_name=_("Books"), related_name="books")
 
     def __str__(self):
         return self.name
