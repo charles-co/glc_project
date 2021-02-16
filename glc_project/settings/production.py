@@ -23,6 +23,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
 SECURE_HSTS_SECONDS             = 1000000
 SECURE_FRAME_DENY               = True
 
+
 BATON = {
     'SITE_HEADER': 'GLC',
     'SITE_TITLE': 'GLC',
