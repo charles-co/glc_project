@@ -144,7 +144,7 @@ BATON = {
         ] },
     ),
     'ANALYTICS': {
-        'CREDENTIALS': os.environ.get('GOOGLE_CREDENTIALS'),
+        'CREDENTIALS': os.path.join('google-credentials.json'),
         'VIEW_ID': os.environ.get('VIEW_ID'),
     }
 }
