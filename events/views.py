@@ -12,11 +12,13 @@ from rest_framework.response import Response
 from .models import Event
 from .renderers import EventRenderer
 from .serializers import EventSerializer, ReactSerializer
+from .pagination import StandardResultsSetPagination
 
 
 class EventViewSet(GenericViewSet):
     
     renderer_classes = (EventRenderer,)
+    pagination_class = StandardResultsSetPagination
     queryset = Event.objects.all()
     permission_classes = [IsAuthenticated,]
 
@@ -28,7 +30,6 @@ class EventViewSet(GenericViewSet):
             return super().get_queryset().current_events()
         else:
             return super().get_queryset().previous_events()
-        return None
 
     def get_serializer_context(self):
         context = super().get_serializer_context()

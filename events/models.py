@@ -9,7 +9,7 @@ from django.utils.translation import ugettext_lazy as _
 from datetime import datetime, timedelta
 
 from sorl.thumbnail import ImageField
-from glc_project.utils import images_directory_path
+from glc_project.utils import files_directory_path
 # Create your models here.
 
 User = get_user_model()
@@ -25,7 +25,10 @@ class EventQuerySet(models.query.QuerySet):
         return self.filter(start__lte=timezone.now(), end__gt=timezone.now())
 
     def upcoming_events(self):
-        return self.filter(start__gt=timezone.now())[:10]
+        days = timedelta(days=7)
+        now = timezone.now()
+        future = now + days
+        return self.filter(start__gt=now, end__lte=future)
 
 class EventManager(models.Manager):
 
@@ -47,7 +50,7 @@ class EventManager(models.Manager):
 class Event(models.Model):
 
     title = models.CharField(_("Title"), max_length=100)
-    photo = ImageField(_("Photo"), upload_to=images_directory_path)
+    photo = ImageField(_("Photo"), upload_to=files_directory_path)
     description = models.TextField(_("Short Description"), blank=True)
     location = models.CharField(_("Location"), max_length=50)
     start = models.DateTimeField(_("Start"), auto_now=False, auto_now_add=False)

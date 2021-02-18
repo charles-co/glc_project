@@ -35,8 +35,6 @@ AUTH_USER_MODEL = 'authentication.User'
 # Application definition
 
 INSTALLED_APPS = [
-    # 'admin_interface',
-    # 'colorfield',
     'baton',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,9 +48,12 @@ INSTALLED_APPS = [
     'authentication',
     'events',
     'bible',
+    'notes',
+    'contents',
 
     # third party apps
     'sslserver',
+    'audiofield',
     'drf_yasg',
     'smart_selects',
     'corsheaders',
@@ -64,6 +65,7 @@ INSTALLED_APPS = [
     'sorl_thumbnail_serializer',
     'django_extensions',
     'baton.autodiscover',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 # X_FRAME_OPTIONS ='SAMEORIGIN'
@@ -80,6 +82,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'audiofield.middleware.threadlocals.ThreadLocals',
 ]
 
 CORS_ORIGIN_ALLOW_ALL = True
@@ -237,3 +240,12 @@ STATICFILES_FINDERS = (
 )
 
 STATIC_URL = '/static/'
+
+CHANNEL_TYPE_VALUE = 0
+
+# 0-Keep original, 8000-8000Hz, 16000-16000Hz, 22050-22050Hz,
+# 44100-44100Hz, 48000-48000Hz, 96000-96000Hz
+FREQ_TYPE_VALUE = 8000
+
+# 0-Keep original, 1-Convert to MP3, 2-Convert to WAV, 3-Convert to OGG
+CONVERT_TYPE_VALUE = 0

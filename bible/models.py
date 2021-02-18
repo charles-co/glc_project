@@ -9,6 +9,52 @@ from smart_selects.db_fields import ChainedManyToManyField, ChainedForeignKey
 from datetime import datetime, timedelta
 # Create your models here.
 
+from django.forms.models import model_to_dict
+
+
+class ModelDiffMixin(object):
+    """
+    A model mixin that tracks model fields' values and provide some useful api
+    to know what fields have been changed.
+    """
+
+    def __init__(self, *args, **kwargs):
+        super(ModelDiffMixin, self).__init__(*args, **kwargs)
+        self.__initial = self._dict
+
+    @property
+    def diff(self):
+        d1 = self.__initial
+        d2 = self._dict
+        diffs = [(k, (v, d2[k])) for k, v in d1.items() if v != d2[k]]
+        return dict(diffs)
+
+    @property
+    def has_changed(self):
+        return bool(self.diff)
+
+    @property
+    def changed_fields(self):
+        return self.diff.keys()
+
+    def get_field_diff(self, field_name):
+        """
+        Returns a diff for field if it's changed and None otherwise.
+        """
+        return self.diff.get(field_name, None)
+
+    def save(self, *args, **kwargs):
+        """
+        Saves model and set initial state.
+        """
+        super(ModelDiffMixin, self).save(*args, **kwargs)
+        self.__initial = self._dict
+
+    @property
+    def _dict(self):
+        return model_to_dict(self, fields=[field.name for field in
+                             self._meta.fields])
+
 class Book(models.Model):
     """
     Example: Gen, Exo
@@ -60,7 +106,26 @@ class Bible(models.Model):
     def __str__(self):
         return self.name
 
-class TodaysVerse(models.Model):
+
+class TodaysVerseQuerySet(models.query.QuerySet):
+    
+    def today(self):
+        now =timezone.now().date()
+        queryset = self.filter(date=now).select_related('bible', 'verse').first()
+        if queryset:
+            return queryset
+        return self.select_related('bible', 'verse').latest('id')
+
+class TodaysVerseManager(models.Manager):
+
+    def get_queryset(self):
+        return TodaysVerseQuerySet(self.model, using=self._db)
+
+    def today(self):
+        return self.get_queryset().today()
+
+class TodaysVerse(models.Model, ModelDiffMixin):
+
     title = models.CharField(_("Title"), max_length=50)
     bible = models.OneToOneField(Bible, verbose_name=_("Bible"), on_delete=models.CASCADE)
     
@@ -80,9 +145,18 @@ class TodaysVerse(models.Model):
                                 chained_field="chapter",
                                 chained_model_field="chapter")
     
+    message = models.TextField(_("Message"), blank=True)
     date = models.DateField(_("To be posted on?"), auto_now=False, auto_now_add=False, default=timezone.now, unique=True)
     created_at = models.DateTimeField(_("Created"), auto_now_add=True)
     updated_at = models.DateTimeField(_("Updated"), auto_now=True)
+    
+    objects = TodaysVerseManager()
+
+    def get_verse(self):
+        return self.verse.reference
+    
+    def get_bible(self):
+        return self.bible.abbreviation
 
     class Meta:
         verbose_name_plural = "Todays Verse"

@@ -15,7 +15,19 @@ class VerseAdmin(admin.ModelAdmin):
     pass
 
 class TodaysVerseAdmin(admin.ModelAdmin):
-    pass
+    list_display = ['title', 'date', 'bible_verse', 'message']
+    readonly_fields = ['message',]
+    search_fields = ('title',)
+    date_hierarchy = 'date'
+    list_select_related = (
+        'verse',
+        'bible',
+    )
+
+    def bible_verse(self, obj):
+        return "{} ({})".format(obj.verse.reference, obj.bible.abbreviation)
+
+    bible_verse.short_description = 'Bible Verse'
 
 # admin.site.register(Bible, BibleAdmin)
 # admin.site.register(Book, BookAdmin)

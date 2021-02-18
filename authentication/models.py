@@ -17,7 +17,7 @@ from django.utils.translation import ugettext_lazy as _
 from phonenumber_field.modelfields import PhoneNumberField
 from rest_framework_simplejwt.tokens import RefreshToken
 from sorl.thumbnail import ImageField
-from glc_project.utils import images_directory_path
+from glc_project.utils import files_directory_path
 
 # Create your models here.
 class UserManager(BaseUserManager):
@@ -100,7 +100,7 @@ class Profile(models.Model):
 
     user = models.OneToOneField(User, verbose_name=_("User"), on_delete=models.CASCADE)
     full_name = models.CharField(_('full name'), max_length=100, default="Anonymous", blank=True)
-    file = ImageField(verbose_name=_("Profile photo"), upload_to=images_directory_path, null=True, blank=True)
+    file = ImageField(verbose_name=_("Profile photo"), upload_to=files_directory_path, null=True, blank=True)
     social_thumb = models.URLField(verbose_name=_("Social photo"), null=True, blank=True)
     phone_number = PhoneNumberField(verbose_name=_("Phone no."), null=True, blank=True)
     dob = models.DateField(verbose_name=_("Date of birth"), null=True, blank=True)
