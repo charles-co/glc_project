@@ -109,11 +109,31 @@ BATON = {
                 },
             )
         },
-        { 'type': 'free', 'label': 'Custom Link', 'url': 'http://www.google.it', 'perms': ('flatpages.add_flatpage', 'auth.change_user') },
-        { 'type': 'free', 'label': 'My parent voice', 'default_open': True, 'children': [
-            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events' },
-            { 'type': 'free', 'label': 'Another custom link', 'url': 'http://www.google.it' },
-        ] },
+        { 'type': 'title', 'label': 'Contents', 'apps': ('contents', ) },
+        {
+            'type': 'app',
+            'name': 'contents',
+            'label': 'Contents',
+            'icon': 'fa fa-folder-plus',
+            'models': (
+                {
+                    'name': 'audio',
+                    'label': 'Audio'
+                },
+                {
+                    'name': 'video',
+                    'label': 'Video'
+                },
+                {
+                    'name': 'podcast',
+                    'label': 'Podcast'
+                },
+            )
+        },
+        { 'type': 'free', 'label': 'External Links', 'default_open': True, 'children': [
+            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events', 'perms': ('event.add_event',) },
+            { 'type': 'free', 'label': 'Google', 'url': 'http://www.google.com' },
+        ]},
     ),
 }
 

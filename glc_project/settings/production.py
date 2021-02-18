@@ -1,17 +1,19 @@
 from .base import *
-import django_heroku
+# import django_heroku
 from django.utils.translation import ugettext_lazy as _
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["*.herokuapp.com"]
+ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70",]
 
-EMAIL_HOST = os.environ.get("MAILGUN_SMTP_SERVER", "")
-EMAIL_HOST_USER     = os.environ.get("MAILGUN_SMTP_LOGIN", "")
-EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD", "")
-EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", "")
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# EMAIL_HOST = os.environ.get("MAILGUN_SMTP_SERVER", "")
+# EMAIL_HOST_USER     = os.environ.get("MAILGUN_SMTP_LOGIN", "")
+# EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD", "")
+# EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", "")
 # EMAIL_USE_SSL = True # Yes for Gmail
-DEFAULT_FROM_EMAIL = "GLC <webmaster@localhost>"
+# DEFAULT_FROM_EMAIL = "GLC <webmaster@localhost>"
 
 CORS_REPLACE_HTTPS_REFERER      = True
 HOST_SCHEME                     = "https://"
@@ -22,6 +24,17 @@ CSRF_COOKIE_SECURE              = True
 SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
 SECURE_HSTS_SECONDS             = 1000000
 SECURE_FRAME_DENY               = True
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': os.environ.get("POSTGRES_NAME"),
+        'USER': os.environ.get("POSTGRES_USER"),
+        'PASSWORD': os.environ.get("POSTGRES_PWD"),
+        'HOST': 'localhost',
+        'PORT': '',
+    }
+}
 
 LOGGING = {
     'version': 1,
@@ -137,10 +150,31 @@ BATON = {
                 },
             )
         },
-        { 'type': 'free', 'label': 'Custom Link', 'url': 'http://www.google.it', 'perms': ('flatpages.add_flatpage', 'auth.change_user') },
-        { 'type': 'free', 'label': 'My parent voice', 'default_open': True, 'children': [
+        { 'type': 'title', 'label': 'Contents', 'apps': ('contents', ) },
+        {
+            'type': 'app',
+            'name': 'contents',
+            'label': 'Contents',
+            'icon': 'fa fa-folder-plus',
+            'models': (
+                {
+                    'name': 'audio',
+                    'label': 'Audio'
+                },
+                {
+                    'name': 'video',
+                    'label': 'Video'
+                },
+                {
+                    'name': 'podcast',
+                    'label': 'Podcast'
+                },
+            )
+        },
+        { 'type': 'free', 'label': 'External Links', 'default_open': True, 'children': [
+            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events', 'perms': ('event.add_event',) },
             { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events' },
-            { 'type': 'free', 'label': 'Another custom link', 'url': 'http://www.google.it' },
+            { 'type': 'free', 'label': 'Google', 'url': 'http://www.google.it' },
         ] },
     ),
     'ANALYTICS': {
@@ -149,10 +183,10 @@ BATON = {
     }
 }
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
-django_heroku.settings(locals(), logging=False, staticfiles=False)
+# django_heroku.settings(locals(), logging=False, staticfiles=False)
