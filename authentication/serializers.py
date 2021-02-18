@@ -248,5 +248,13 @@ class TokenRefreshSerializer(serializers.Serializer):
 
         return data
 
+class PrayerPointSerializer(serializers.Serializer):
+    name = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True)
+    request = serializers.CharField(max_length=550, required=True)
+
+    class Meta:
+        fields = ['name', 'email', 'request']
+
 class PasswordResetConfirmSerializer(serializers.Serializer):
     pass

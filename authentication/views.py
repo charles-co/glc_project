@@ -35,7 +35,7 @@ from .permissions import IsOwner
 from .renderers import UserRenderer
 from .serializers import (ChangePasswordSerializer, LoginSerializer, PasswordResetConfirmSerializer,
                             ProfileSerializer, ProfileUpdateSerializer, RegisterSerializer, 
-                            ResetPasswordEmailRequestSerializer, UserSerializer, 
+                            ResetPasswordEmailRequestSerializer, UserSerializer, PrayerPointSerializer,
                             PasswordSerializer, LogoutSerializer, ResendVerification, TokenRefreshSerializer)
 from .utils import Util
 
@@ -58,12 +58,6 @@ class UserViewSet(GenericViewSet):
 
     def get_object(self):
         return get_object_or_404(self.get_queryset(), user=self.request.user)
-
-    # def get_permissions(self):
-    #     actions = ['retrieve', 'partial_update', 'update']
-    #     if self.action in actions:
-    #         return [IsAuthenticated(), IsOwner()]
-    #     return super().get_permissions()
          
     def get_serializer_class(self):
         actions = ['register', 'login', 
@@ -271,6 +265,19 @@ class PasswordResetConfirm(GenericAPIView):
             return CustomRedirect(redirect_url + "?token_valid=True&message=Credentials valid&uidb64="+uid64+"&token="+token)
         except DjangoUnicodeDecodeError:
             return CustomRedirect(redirect_url + '?token_valid=False')
+
+class PrayerAPIView(GenericAPIView):
+    
+    serializer_class = PrayerPointSerializer
+    permission_classes = [IsAuthenticated,]
+
+    def post(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        data = serializer.data
+        payload = {'body': data['request'], 'subject': 'Prayer Request', 'email': data['email']}
+        Util.send_email(payload)
+        return Response({'succes':True, 'message': 'sent successfully.'}, status=status.HTTP_200_OK)
 
 class TokenViewBase(GenericAPIView):
     permission_classes = ()

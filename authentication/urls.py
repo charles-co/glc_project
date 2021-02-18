@@ -5,7 +5,7 @@ from django.urls import include, path, re_path
 from rest_framework import routers
 # from rest_framework_simplejwt.views import (TokenRefreshView)
 
-from .views import UserViewSet, PasswordResetConfirm, TokenRefreshView
+from .views import UserViewSet, PasswordResetConfirm, TokenRefreshView, PrayerAPIView
 
 app_name = 'authentication'
 
@@ -18,5 +18,5 @@ urlpatterns = [
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token-refresh'),
     path('api/auth/password/reset/<uidb64>/<token>/', 
             PasswordResetConfirm.as_view(), name='password-reset-confirm'),
-
+    path('api/prayer/request/', PrayerAPIView.as_view(), name='prayer-request'),
 ]
