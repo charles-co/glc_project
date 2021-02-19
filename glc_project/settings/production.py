@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70",]
+ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70", "loaclhost"]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
