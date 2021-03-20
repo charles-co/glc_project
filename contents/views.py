@@ -4,10 +4,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.response import Response
 
-from .models import Audio, Video, Podcast
+from .models import Audio, Video, Podcast, TV
 from .renderers import ContentRenderer
 from .pagination import StandardResultsSetPagination
-from .serializers import AudioSerializer, VideoSerializer, PodcastSerializer
+from .serializers import AudioSerializer, VideoSerializer, PodcastSerializer, TVSerializer
 # Create your views here.
 
 
@@ -23,6 +23,12 @@ class ContentViewSet(GenericViewSet):
             return Audio.objects.all()
         elif self.action == 'videos':
             return Video.objects.all()
+        elif self.action == 'live_tv':
+            return TV.objects.live_tv()
+        elif self.action == 'beyond_the_pulpit':
+            return TV.objects.beyond_the_pulpit()
+        elif self.action == 'plugin':
+            return TV.objects.plugin()
         else:
             return Podcast.objects.all()
 
@@ -32,8 +38,10 @@ class ContentViewSet(GenericViewSet):
             return AudioSerializer
         elif self.action == actions[1]:
             return VideoSerializer
-        else:
+        elif self.action == actions[2]:
             return PodcastSerializer
+        else:
+            return TVSerializer
 
     @action(methods=['get'], detail=False)
     def audios(self, request):
@@ -57,6 +65,33 @@ class ContentViewSet(GenericViewSet):
     def podcasts(self, request):
         """
         Podcasts
+        
+        """
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def live_tv(self, request):
+        """
+        TV
+        
+        """
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def beyond_the_pulpit(self, request):
+        """
+        TV
+        
+        """
+        serializer = self.get_serializer(self.get_queryset(), many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    
+    @action(methods=['get'], detail=False)
+    def plugin(self, request):
+        """
+        TV
         
         """
         serializer = self.get_serializer(self.get_queryset(), many=True)

@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.sites.shortcuts import get_current_site
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.encoding import smart_str, force_str, force_bytes, smart_bytes, DjangoUnicodeDecodeError
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode, url_has_allowed_host_and_scheme
 
@@ -94,9 +95,11 @@ class LoginSerializer(serializers.ModelSerializer):
         else:
             if not user.is_active:
                 raise AuthenticationFailed('Account disabled, contact admin.')
-            else:
-                if not user.is_verified:
-                    raise AuthenticationFailed('Email not verified.')
+           # else:
+               # if not user.is_verified:
+               #     raise AuthenticationFailed('Email not verified.')
+        user.last_login =timezone.now()
+        user.save()
         return {
             'id': 0,
             'email': user.email,
@@ -142,8 +145,8 @@ class ResetPasswordEmailRequestSerializer(serializers.Serializer):
             relativeLink = reverse('authentication:password-reset-confirm', kwargs={'uidb64': uidb64, 'token': token})
             absurl = 'http://' + current_site + relativeLink
             redirect_url = attrs.get('redirect_url', '')
-            body = 'Hi,\nUse the link below to reset your password \n' + absurl
-            payload = {'body': body, 'subject': 'Reset your password', 'email': user.email} + '?redirect_url=' + redirect_url
+            body = 'Hi,\nUse the link below to reset your password \n' + absurl + '?redirect_url=' + redirect_url
+            payload = {'body': body, 'subject': 'Reset your password', 'email': user.email}
             Util.send_email(payload)
             return attrs
 

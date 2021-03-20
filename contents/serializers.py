@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Audio, Video, Podcast
+from .models import Audio, Video, Podcast, TV
 
 
 
@@ -25,3 +25,9 @@ class PodcastSerializer(serializers.ModelSerializer):
         model = Podcast
         fields = ['title', 'file', 'created_at']
         read_only_fields = ['created_at', 'file', 'title']
+        
+class TVSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = TV
+        fields = "__all__"

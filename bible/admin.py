@@ -17,7 +17,7 @@ class VerseAdmin(admin.ModelAdmin):
 class TodaysVerseAdmin(admin.ModelAdmin):
     list_display = ['title', 'date', 'bible_verse', 'message']
     readonly_fields = ['message',]
-    search_fields = ('title',)
+    search_fields = ('title', 'message')
     date_hierarchy = 'date'
     list_select_related = (
         'verse',
@@ -28,6 +28,10 @@ class TodaysVerseAdmin(admin.ModelAdmin):
         return "{} ({})".format(obj.verse.reference, obj.bible.abbreviation)
 
     bible_verse.short_description = 'Bible Verse'
+
+    baton_cl_includes = [
+        ('bible/admin_include_top.html', 'top',),
+    ]
 
 # admin.site.register(Bible, BibleAdmin)
 # admin.site.register(Book, BookAdmin)

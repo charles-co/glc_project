@@ -14,25 +14,40 @@ class EventAdmin(admin.ModelAdmin):
     list_display = ('title', 'description', 'location', 'active', 'start', 'end', 'interest')
     list_filter = ('active', 'start')
     list_display_links = ('title',)
-    search_fields = ('title',)
+    search_fields = ('title', 'description')
     date_hierarchy = 'start'
-    # readonly_fields = ["photo_image"]
-
 
     def interest(self, obj):
         return str(obj.reactions.count()) + " " + pluralize(obj.reactions.count(), 'User,Users')
 
     interest.short_description = 'Reacted by?'
 
-    # def photo_image(self, obj):
-    #     if obj != "":
-    #         return mark_safe('<img src="{url}" width="100%" height="50" />'.format(
-    #             url = obj.photo.url,
-    #             width=obj.photo.width,
-    #             height=obj.photo.height,
-    #             )
-    #         )
-    #     return mark_safe('<p>No image uploaded yet, please save & check back.</p>')
+    baton_cl_includes = [
+        ('events/admin_include_top.html', 'top',),
+    ]
+
+    fieldsets = (
+        ('Details', {
+            'fields': ('title', 'location', 'description',),
+            'classes': ('baton-tabs-init', 'baton-tab-fs-duration', 'baton-tab-group-fs-attachment',),
+            'description': 'Details of event.'
+        }),
+        ('Time Frame', {
+            'fields': ('start', 'end', ),
+            'classes': ('tab-fs-duration', ),
+            'description': 'Duration.'
+        }),
+        ('Attachment', {
+            'fields': ('photo', ),
+            'classes': ('tab-fs-attachment', ),
+            'description': 'Add image.'
+        }),
+        ('Active', {
+            'fields': ('active', ),
+            'classes': ('tab-fs-none', ),
+            # 'description': 'This is another description text'
+        }),
+    )
 
 
 

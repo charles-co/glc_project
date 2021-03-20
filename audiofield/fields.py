@@ -204,54 +204,56 @@ class AudioField(FileField):
             result = audio_convert_task.delay(conv)
 
     def _rename_audio(self, instance=None, **kwargs):
+        pass
         '''Rename uploaded audio file & calls methods to convert audio file format if
         convert_to is selected'''
-        if getattr(instance, self.name):
-            filename = getattr(instance, self.name).path
+#         if getattr(instance, self.name):
+#             filename = getattr(instance, self.name).path
 
-            # Get the extension and limit to 3 chars
-            ext = os.path.splitext(filename)[1].lower()[:4]
-            # Get new file name and make sure it's unique
-            dst = self.generate_filename(instance, '%s%s%s' % (self.filename_prefix, self.uuid, ext))
-            dst_fullpath = os.path.join(settings.MEDIA_ROOT, dst)
+#             # Get the extension and limit to 3 chars
+#             ext = os.path.splitext(filename)[1].lower()[:4]
+#             # Get new file name and make sure it's unique
+#             dst = self.generate_filename(instance, '%s%s%s' % (self.filename_prefix, self.uuid, ext))
+#             dst_fullpath = os.path.join(settings.MEDIA_ROOT, dst)
 
-            # Same file should not exits
-            if not os.path.isfile(dst_fullpath):
+#             # Same file should not exits
+#             if not os.path.isfile(dst_fullpath):
 
-                if os.path.abspath(filename) != os.path.abspath(dst_fullpath):
-                    os.rename(filename, dst_fullpath)
-                    self._convert_audio(dst_fullpath, instance, ext[1:4])
+#                 if os.path.abspath(filename) != os.path.abspath(dst_fullpath):
+#                     os.rename(filename, dst_fullpath)
+#                     self._convert_audio(dst_fullpath, instance, ext[1:4])
+# 
+#                     request = threadlocals.get_current_request()
+#                     convert_type = int(request.POST["convert_type"])
 
-                    request = threadlocals.get_current_request()
-                    convert_type = int(request.POST["convert_type"])
-
-                    # 0 => Keep original
-                    if convert_type > 0:
-                        # Delete original audio file
-                        if os.path.exists(dst_fullpath):
-                            # Check for no .. and no *
-                            # DISABLED Delete file
-                            """
-                            if dst_fullpath.find('../../') == -1 and dst_fullpath.find('*') == -1:
-                                os.remove(dst_fullpath)
-                            """
-                        ext = '.' + CONVERT_TYPE_CHK[convert_type]
-                        dst = self.generate_filename(instance, '%s%s%s' %
-                                                    (self.filename_prefix, self.uuid, ext))
-                    setattr(instance, self.attname, dst)
-                    instance.save()
-            else:
-                error_msg = ("file already exists!")
-                logger.error(error_msg)
+#                     # 0 => Keep original
+#                     if convert_type > 0:
+#                         # Delete original audio file
+#                         if os.path.exists(dst_fullpath):
+#                             # Check for no .. and no *
+#                             # DISABLED Delete file
+#                             """
+#                             if dst_fullpath.find('../../') == -1 and dst_fullpath.find('*') == -1:
+#                                 os.remove(dst_fullpath)
+#                             """
+#                         ext = '.' + CONVERT_TYPE_CHK[convert_type]
+#                         dst = self.generate_filename(instance, '%s%s%s' %
+#                                                     (self.filename_prefix, self.uuid, ext))
+#                     setattr(instance, self.attname, dst)
+#                     instance.save()
+#             else:
+#                 error_msg = ("file already exists!")
+#                 logger.error(error_msg)
 
     def _set_audio_converted(self, instance=None, **kwargs):
+        pass
         '''Creates a "audio_field" object as attribute of the FileField instance
         audio_field attribute will be of the same class of original file, so
         "path", "url", "name"... properties can be used'''
-        if getattr(instance, self.name):
-            filename = self.generate_filename(instance, os.path.basename(getattr(instance, self.name).path))
-            audio_field = StdAudioField(filename)
-            setattr(getattr(instance, self.name), 'audio_converted', audio_field)
+        # if getattr(instance, self.name):
+        #     filename = self.generate_filename(instance, os.path.basename(getattr(instance, self.name).path))
+        #     audio_field = StdAudioField(filename)
+        #     setattr(getattr(instance, self.name), 'audio_converted', audio_field)
 
     def formfield(self, **kwargs):
         '''Specify form field and widget to be used on the forms'''

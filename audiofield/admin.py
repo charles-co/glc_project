@@ -43,4 +43,4 @@ class AudioFileAdmin(admin.ModelAdmin):
         return actions
 
 
-admin.site.register(AudioFile, AudioFileAdmin)
+#admin.site.register(AudioFile, AudioFileAdmin)

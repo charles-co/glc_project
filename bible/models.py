@@ -111,10 +111,8 @@ class TodaysVerseQuerySet(models.query.QuerySet):
     
     def today(self):
         now =timezone.now().date()
-        queryset = self.filter(date=now).select_related('bible', 'verse').first()
-        if queryset:
-            return queryset
-        return self.select_related('bible', 'verse').latest('id')
+        queryset = self.filter(date__lte=now).select_related('bible', 'verse').order_by('-date')[:1]
+        return queryset
 
 class TodaysVerseManager(models.Manager):
 
@@ -127,9 +125,9 @@ class TodaysVerseManager(models.Manager):
 class TodaysVerse(models.Model, ModelDiffMixin):
 
     title = models.CharField(_("Title"), max_length=50)
-    bible = models.OneToOneField(Bible, verbose_name=_("Bible"), on_delete=models.CASCADE)
+    bible = models.ForeignKey(Bible, verbose_name=_("Bible"), on_delete=models.CASCADE)
     
-    book = models.OneToOneField(Book, verbose_name=_("Book"), on_delete=models.CASCADE)
+    book = models.ForeignKey(Book, verbose_name=_("Book"), on_delete=models.CASCADE)
 
     chapter = ChainedForeignKey(Chapter,
                                 auto_choose=True,

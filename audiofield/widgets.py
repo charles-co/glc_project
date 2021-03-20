@@ -47,7 +47,7 @@ def add_select_box(select_name, select_value):
     '''
     function to create Html select option
     '''
-    select_box = '<select name="%s">' % (select_name)
+    select_box = '<select class="d-none" name="%s">' % (select_name)
     for i in select_value:
         select_box += '<option value="%s">%s</option>' % (i[0], i[1])
     select_box += '</select>'
@@ -73,26 +73,27 @@ class AdminAudioFileWidget(AdminFileWidget):
         freq_select_box = add_select_box('freq_type', FREQ_TYPE)
 
         file_url = ''
-        item = '<tr><td style="vertical-align: middle;">%s</td><td>%s</td>'
+        item = '<tr><td class="%s" style="vertical-align: middle;">%s</td><td>%s</td>'
         output = []
         output.append('<table style="border-style: none;">')
         help_text = _('Allowed format - mp3 wav and ogg')
         if value and type(value).__name__ != 'str':
             file_url = settings.MEDIA_URL + str(value)
             output.append(item % (
+                  "d-block",
                 _('Currently:'),
                 '<audio src="%s" controls>Your browser does not support the audio element.</audio>' % (file_url)))
-            output.append(item % (_('Change:'), input + '<br/>%s' % help_text))
+            output.append(item % ('d-block', _('Change:'), input + '<br/>%s' % help_text))
         else:
-            output.append(item % (_('Upload:'), input + '<br/>%s' % help_text))
+            output.append(item % ('d-block', _('Upload:'), input + '<br/>%s' % help_text))
 
-        output.append(item % (_('Convert to:'), file_select_box))
-        output.append(item % (_('Channel:'), channel_select_box))
-        output.append(item % (_('Frequency:'), freq_select_box))
+        output.append(item % ('d-none', _('Convert to:'), file_select_box))
+        output.append(item % ('d-none', _('Channel:'), channel_select_box))
+        output.append(item % ('d-none', _('Frequency:'), freq_select_box))
 
         if value:
-            # split colon to force "Delete" that is already translated
-            output.append(item % (_('Delete:'), '<input type="checkbox" name="%s_delete"/>' % name))
+#            split colon to force "Delete" that is already translated
+            output.append(item % ('d-none', _('Delete:'), '<input class="d-none" type="checkbox" name="%s_delete"/>' % name))
         output.append('</table>')
 
         return mark_safe(''.join(output))

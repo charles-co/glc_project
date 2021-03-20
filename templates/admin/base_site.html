@@ -19,6 +19,7 @@
 {% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
 
 {% block extrahead %}
+    {% include "common_audiofield.html" %}
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
     <script src="{% static 'baton/app/dist/baton.min.js' %}"></script>
     <!-- <script src="http://localhost:8080/dist/baton.min.js"></script> -->

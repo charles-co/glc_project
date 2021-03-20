@@ -4,7 +4,7 @@ from django.utils.translation import ugettext_lazy as _
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70", "loaclhost"]
+ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70", "localhost"]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -15,15 +15,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 # EMAIL_USE_SSL = True # Yes for Gmail
 # DEFAULT_FROM_EMAIL = "GLC <webmaster@localhost>"
 
-CORS_REPLACE_HTTPS_REFERER      = True
-HOST_SCHEME                     = "https://"
-SECURE_PROXY_SSL_HEADER         = ('HTTP_X_FORWARDED_PROTO', 'https')
-SECURE_SSL_REDIRECT             = True
-SESSION_COOKIE_SECURE           = True
-CSRF_COOKIE_SECURE              = True
-SECURE_HSTS_INCLUDE_SUBDOMAINS  = True
-SECURE_HSTS_SECONDS             = 1000000
-SECURE_FRAME_DENY               = True
+CORS_REPLACE_HTTPS_REFERER      = False
+HOST_SCHEME                     = "http://"
+SECURE_PROXY_SSL_HEADER         = None
+SECURE_SSL_REDIRECT             = False
+SESSION_COOKIE_SECURE           = False
+CSRF_COOKIE_SECURE              = False
+SECURE_HSTS_SECONDS             = None
+SECURE_HSTS_INCLUDE_SUBDOMAINS  = False
+SECURE_FRAME_DENY               = False
 
 DATABASES = {
     'default': {
@@ -75,6 +75,25 @@ LOGGING = {
     }
 }
 
+AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
+}
+AWS_STATIC_LOCATION = 'static'
+
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION)
+STATICFILES_STORAGE = 'glc_project.storage_backends.StaticStorage'
+
+AWS_PUBLIC_MEDIA_LOCATION = 'media/public'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_PUBLIC_MEDIA_LOCATION}/'
+DEFAULT_FILE_STORAGE = 'glc_project.storage_backends.PublicMediaStorage'
+
 BATON = {
     'SITE_HEADER': 'GLC',
     'SITE_TITLE': 'GLC',
@@ -92,7 +111,7 @@ BATON = {
     'MENU_TITLE': 'Navigation',
     'MESSAGES_TOASTS': True,
     'GRAVATAR_DEFAULT_IMG': 'retro',
-    'LOGIN_SPLASH': '/static/images/background3.jpg',
+    'LOGIN_SPLASH': 'https://%s/%s/images/background.jpg' % (AWS_S3_CUSTOM_DOMAIN, AWS_STATIC_LOCATION),
     'MENU': (
         { 'type': 'title', 'label': 'Authentication', 'apps': ('auth', ) },
         {
@@ -169,13 +188,12 @@ BATON = {
                     'name': 'podcast',
                     'label': 'Podcast'
                 },
+                {
+                    'name': 'tv',
+                    'label': 'TV'
+                },
             )
         },
-        { 'type': 'free', 'label': 'External Links', 'default_open': True, 'children': [
-            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events', 'perms': ('event.add_event',) },
-            { 'type': 'model', 'label': 'Event', 'name': 'event', 'app': 'events' },
-            { 'type': 'free', 'label': 'Google', 'url': 'http://www.google.it' },
-        ] },
     ),
     'ANALYTICS': {
         'CREDENTIALS': os.path.join('google-credentials.json'),
@@ -184,9 +202,9 @@ BATON = {
 }
 
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-MEDIA_URL ='/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+# MEDIA_URL ='/media/'
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # django_heroku.settings(locals(), logging=False, staticfiles=False)

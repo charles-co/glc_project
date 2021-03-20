@@ -18,7 +18,7 @@ class EventSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Event
-        exclude = ['end', 'active', 'reactions', 'start']
+        exclude = ['end', 'active', 'reactions', 'start', 'created_at', 'updated_at']
 
     def get_start_time(self, obj):
         return date(obj.start.astimezone(), arg='P T')

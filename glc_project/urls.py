@@ -49,6 +49,7 @@ urlpatterns = [
     path('baton/', include('baton.urls')),
     url(r'^chaining/', include('smart_selects.urls')),
     path('', include('authentication.urls')),
+    path('auth/', include("authentication.passwords.urls")),
     path('', include('events.urls')),
     path('', include('bible.urls')),
     path('', include('notes.urls')),
