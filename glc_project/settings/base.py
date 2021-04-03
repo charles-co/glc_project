@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'contents',
 
     # third party apps
-    'sslserver',
     'audiofield',
+    'crispy_forms',
     'storages',
     'drf_yasg',
     'smart_selects',
@@ -70,7 +70,9 @@ INSTALLED_APPS = [
 ]
 
 # X_FRAME_OPTIONS ='SAMEORIGIN'
+
 USE_DJANGO_JQUERY = True
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -143,16 +145,7 @@ WSGI_APPLICATION = 'glc_project.wsgi.application'
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 

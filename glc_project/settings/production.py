@@ -7,12 +7,16 @@ DEBUG = False
 ALLOWED_HOSTS = ["*.herokuapp.com", "164.90.139.70", "localhost"]
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django_ses.SESBackend'
 
-# EMAIL_HOST = os.environ.get("MAILGUN_SMTP_SERVER", "")
-# EMAIL_HOST_USER     = os.environ.get("MAILGUN_SMTP_LOGIN", "")
-# EMAIL_HOST_PASSWORD = os.environ.get("MAILGUN_SMTP_PASSWORD", "")
-# EMAIL_PORT = os.environ.get("MAILGUN_SMTP_PORT", "")
-# EMAIL_USE_SSL = True # Yes for Gmail
+AWS_SES_REGION_NAME = 'us-east-2'
+AWS_SES_REGION_ENDPOINT = 'email.us-east-2.amazonaws.com'
+
+EMAIL_HOST = os.environ.get("AWS_SMTP_SERVER", "")
+EMAIL_HOST_USER     = os.environ.get("AWS_SMTP_LOGIN", "")
+EMAIL_HOST_PASSWORD = os.environ.get("AWS_SMTP_PASSWORD", "")
+EMAIL_PORT = os.environ.get("AWS_SMTP_PORT", "")
+EMAIL_USE_TLS = True
 # DEFAULT_FROM_EMAIL = "GLC <webmaster@localhost>"
 
 CORS_REPLACE_HTTPS_REFERER      = False
